@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -16,8 +17,10 @@ public class Rabbit extends Animal
     private static final int BREEDING_AGE = 2;
     // The age to which a rabbit can live.
     private static final int MAX_AGE = 40;
-    // The likelihood of a rabbit breeding.
+    // The likelihood of a rabbit breeding when it meets another rabbit.
     private static final double BREEDING_PROBABILITY = 0.12;
+    // The number of years before a rabbit can breed again.
+    private static final int BREEDING_INTERVAL = 3;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
     // A shared random number generator to control breeding.
@@ -27,6 +30,8 @@ public class Rabbit extends Animal
     
     // The rabbit's age.
     private int age;
+    // The age of the rabbit when it last bred.
+    private int ageLastBred;
 
     /**
      * Create a new rabbit. A rabbit may be created with age
@@ -54,7 +59,7 @@ public class Rabbit extends Animal
     {
         incrementAge();
         if(isAlive()) {
-            giveBirth(newRabbits);            
+            breed(newRabbits);            
             // Try to move into a free location.
             Location newLocation = getField().freeAdjacentLocation(getLocation());
             if(newLocation != null) {
@@ -84,32 +89,30 @@ public class Rabbit extends Animal
      * New births will be made into free adjacent locations.
      * @param newRabbits A list to return newly born rabbits.
      */
-    private void giveBirth(List<Animal> newRabbits)
+    public void breed(List<Animal> newRabbits)
     {
-        // New rabbits are born into adjacent locations.
-        // Get a list of adjacent free locations.
+        String sex = getSex();
         Field field = getField();
         List<Location> free = field.getFreeAdjacentLocations(getLocation());
-        int births = breed();
-        for(int b = 0; b < births && free.size() > 0; b++) {
-            Location loc = free.remove(0);
-            Rabbit young = new Rabbit(false, field, loc);
-            newRabbits.add(young);
+        List<Location> locations = field.adjacentLocations(getLocation());
+        Iterator<Location> it = locations.iterator();
+        while(it.hasNext()){
+            Location where = it.next();
+            Object animal = field.getObjectAt(where);
+            if(animal instanceof Rabbit){
+                Rabbit rabbit = (Rabbit) animal;
+                if (rabbit.getSex() != sex){
+                    if (rand.nextDouble() <= BREEDING_PROBABILITY) {
+                        int births = rand.nextInt(MAX_LITTER_SIZE) + 1;
+                        for(int b = 0; b < births && free.size() > 0; b++) {
+                            Location loc = free.remove(0);
+                            Rabbit young = new Rabbit(false, field, loc);
+                            newRabbits.add(young);
+                        }
+                    }
+                }
+            }
         }
-    }
-        
-    /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     * @return The number of births (may be zero).
-     */
-    private int breed()
-    {
-        int births = 0;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        return births;
     }
 
     /**
@@ -118,6 +121,6 @@ public class Rabbit extends Animal
      */
     private boolean canBreed()
     {
-        return age >= BREEDING_AGE;
+        return (age >= BREEDING_AGE) && (age >= ageLastBred + BREEDING_INTERVAL);
     }
 }

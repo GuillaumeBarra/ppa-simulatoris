@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Random;
 
 /**
  * A class representing shared characteristics of animals.
@@ -14,6 +15,8 @@ public abstract class Animal
     private Field field;
     // The animal's position in the field.
     private Location location;
+    // The animal's sex.
+    private String sex;
     
     /**
      * Create a new animal at location in field.
@@ -26,6 +29,15 @@ public abstract class Animal
         alive = true;
         this.field = field;
         setLocation(location);
+        Random rand = new Random();
+        int sex_probability = rand.nextInt(2);
+        
+        if (sex_probability == 0){
+            sex = "male";
+        } else {
+            sex = "female";
+        }
+        
     }
     
     /**
@@ -35,6 +47,8 @@ public abstract class Animal
      */
     abstract public void act(List<Animal> newAnimals);
 
+    abstract public void breed(List<Animal> newAnimals); 
+    
     /**
      * Check whether the animal is alive or not.
      * @return true if the animal is still alive.
@@ -65,6 +79,15 @@ public abstract class Animal
     protected Location getLocation()
     {
         return location;
+    }
+    
+    /**
+     * Return the animal's sex.
+     * @return the animal's sex.
+     */
+    protected String getSex()
+    {
+        return sex;
     }
     
     /**
