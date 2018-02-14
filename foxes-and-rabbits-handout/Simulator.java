@@ -18,10 +18,16 @@ public class Simulator
     private static final int DEFAULT_WIDTH = 120;
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 80;
+    // The default time in minutes for the sunrise.
+    private static final int DEFAULT_SUNRISE_TIME = 420;
+    // The default time in minutes for the sunset.
+    private static final int DEFAULT_SUNSET_TIME = 1020;
+    // The number of minutes per step.
+    private static final int TIME_PER_STEP = 60;
     // The probability that a fox will be created in any given grid position.
     private static final double FOX_CREATION_PROBABILITY = 0.02;
     // The probability that a rabbit will be created in any given grid position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.08;    
+    private static final double RABBIT_CREATION_PROBABILITY = 0.08; 
 
     // List of animals in the field.
     private List<Animal> animals;
@@ -29,6 +35,8 @@ public class Simulator
     private Field field;
     // The current step of the simulation.
     private int step;
+    // An instance of time: TODO: better comment
+    private Time time;
     // A graphical view of the simulation.
     private SimulatorView view;
     
@@ -37,7 +45,7 @@ public class Simulator
      */
     public Simulator()
     {
-        this(DEFAULT_DEPTH, DEFAULT_WIDTH);
+        this(DEFAULT_DEPTH, DEFAULT_WIDTH, DEFAULT_SUNRISE_TIME, DEFAULT_SUNSET_TIME);
     }
     
     /**
@@ -45,7 +53,7 @@ public class Simulator
      * @param depth Depth of the field. Must be greater than zero.
      * @param width Width of the field. Must be greater than zero.
      */
-    public Simulator(int depth, int width)
+    public Simulator(int depth, int width, int sunRise, int sunSet)
     {
         if(width <= 0 || depth <= 0) {
             System.out.println("The dimensions must be greater than zero.");
@@ -56,6 +64,8 @@ public class Simulator
         
         animals = new ArrayList<>();
         field = new Field(depth, width);
+        
+        time = new Time(sunRise, sunSet);
 
         // Create a view of the state of each location in the field.
         view = new SimulatorView(depth, width);
@@ -84,7 +94,7 @@ public class Simulator
     {
         for(int step = 1; step <= numSteps && view.isViable(field); step++) {
             simulateOneStep();
-            // delay(60);   // uncomment this to run more slowly
+            delay(60);   // uncomment this to run more slowly
         }
     }
     
@@ -96,6 +106,8 @@ public class Simulator
     public void simulateOneStep()
     {
         step++;
+        time.incrementTime(TIME_PER_STEP);
+        System.out.println("        " + time.getTime());
 
         // Provide space for newborn animals.
         List<Animal> newAnimals = new ArrayList<>();        
@@ -141,7 +153,7 @@ public class Simulator
                     Fox fox = new Fox(true, field, location);
                     animals.add(fox);
                 }
-                else if(rand.nextDoub   le() <= RABBIT_CREATION_PROBABILITY) {
+                else if(rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
                     Rabbit rabbit = new Rabbit(true, field, location);
                     animals.add(rabbit);
