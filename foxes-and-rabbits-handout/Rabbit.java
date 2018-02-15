@@ -13,6 +13,10 @@ public class Rabbit extends Animal
 {
     // Characteristics shared by all rabbits (class variables).
 
+    // The probability of a rabbit escaping from a predator.
+    private static double escapeProbability = 0.6;
+    // The probability change of a rabbit escaping from a predator.
+    private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
     // The age at which a rabbit can start to breed.
     private static final int BREEDING_AGE = 2;
     // The age to which a rabbit can live.
@@ -25,9 +29,13 @@ public class Rabbit extends Animal
     private static final int MAX_LITTER_SIZE = 4;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
-    
+    // Wether or not the rabbit is asleep.
+    private boolean isAsleep = false;
+    // The probability that the animal falls asleep.
+    private static final double SLEEP_PROBABILITY = 0.5;
+
     // Individual characteristics (instance fields).
-    
+
     // The rabbit's age.
     private int age;
     // The age of the rabbit when it last bred.
@@ -49,28 +57,39 @@ public class Rabbit extends Animal
             age = rand.nextInt(MAX_AGE);
         }
     }
-    
+
     /**
      * This is what the rabbit does most of the time - it runs 
      * around. Sometimes it will breed or die of old age.
      * @param newRabbits A list to return newly born rabbits.
      */
-    public void act(List<Animal> newRabbits)
+    public void act(List<Animal> newRabbits, boolean isNight)
     {
         incrementAge();
         if(isAlive()) {
-            breed(newRabbits);            
+            if (isAsleep) {return;}
+            else {
+                if(isNight){
+                    isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
+                    if (isAsleep) {return;}
+                    // System.out.println("is night rabbit");
+                    escapeProbability += ESCAPE_PROBABILITY_CHANGE; 
+                }
+            breed(newRabbits);
             // Try to move into a free location.
             Location newLocation = getField().freeAdjacentLocation(getLocation());
             if(newLocation != null) {
-                setLocation(newLocation);
+               setLocation(newLocation);
             }
             else {
                 // Overcrowding.
                 setDead();
             }
+            }
         }
+        
     }
+    
 
     /**
      * Increase the age.
@@ -83,7 +102,7 @@ public class Rabbit extends Animal
             setDead();
         }
     }
-    
+
     /**
      * Check whether or not this rabbit is to give birth at this step.
      * New births will be made into free adjacent locations.
@@ -105,6 +124,7 @@ public class Rabbit extends Animal
                     if (rand.nextDouble() <= BREEDING_PROBABILITY) {
                         int births = rand.nextInt(MAX_LITTER_SIZE) + 1;
                         for(int b = 0; b < births && free.size() > 0; b++) {
+                            System.out.println("bred rabbit!");
                             Location loc = free.remove(0);
                             Rabbit young = new Rabbit(false, field, loc);
                             newRabbits.add(young);
@@ -122,5 +142,14 @@ public class Rabbit extends Animal
     private boolean canBreed()
     {
         return (age >= BREEDING_AGE) && (age >= ageLastBred + BREEDING_INTERVAL);
+    }
+
+    /**
+     * Get the escape probability of a rabbit.
+     * @return the escape probability of a rabbit.
+     */
+    public double getEscapeProbability(boolean isNight)
+    {
+        return isNight ? escapeProbability + ESCAPE_PROBABILITY_CHANGE : escapeProbability;
     }
 }

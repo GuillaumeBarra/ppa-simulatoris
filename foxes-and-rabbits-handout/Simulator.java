@@ -25,9 +25,9 @@ public class Simulator
     // The number of minutes per step.
     private static final int TIME_PER_STEP = 60;
     // The probability that a fox will be created in any given grid position.
-    private static final double FOX_CREATION_PROBABILITY = 0.02;
+    private static final double FOX_CREATION_PROBABILITY = 0.08;
     // The probability that a rabbit will be created in any given grid position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.08; 
+    private static final double RABBIT_CREATION_PROBABILITY = 0.15; 
 
     // List of animals in the field.
     private List<Animal> animals;
@@ -107,14 +107,15 @@ public class Simulator
     {
         step++;
         time.incrementTime(TIME_PER_STEP);
-        System.out.println("        " + time.getTime());
+        boolean isNight = time.isNight();
+        System.out.println("        " + time.getTime() + time.isNight());
 
         // Provide space for newborn animals.
         List<Animal> newAnimals = new ArrayList<>();        
         // Let all rabbits act.
         for(Iterator<Animal> it = animals.iterator(); it.hasNext(); ) {
             Animal animal = it.next();
-            animal.act(newAnimals);
+            animal.act(newAnimals, isNight);
             if(! animal.isAlive()) {
                 it.remove();
             }
@@ -134,6 +135,7 @@ public class Simulator
         step = 0;
         animals.clear();
         populate();
+        time.setTime(500);
         
         // Show the starting state in the view.
         view.showStatus(step, field);

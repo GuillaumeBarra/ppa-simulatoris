@@ -20,7 +20,7 @@ public class Time
      */
     public Time(int sunRise, int sunSet)
     {
-        this.minutes = 0;
+        this.minutes = 500;
         this.sunRise = sunRise;
         this.sunSet = sunSet;
     }
@@ -45,6 +45,11 @@ public class Time
     public int getTime()
     {
         return minutes;
+    }
+    
+    // should this be a reset instead?
+    public void setTime(int minutes){
+        minutes = minutes;
     }
     
     

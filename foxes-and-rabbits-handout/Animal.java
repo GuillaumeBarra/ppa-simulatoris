@@ -44,8 +44,9 @@ public abstract class Animal
      * Make this animal act - that is: make it do
      * whatever it wants/needs to do.
      * @param newAnimals A list to receive newly born animals.
+     * @param isNight A boolean value that is true when night time, false if otherwise.
      */
-    abstract public void act(List<Animal> newAnimals);
+    abstract public void act(List<Animal> newAnimals, boolean isNight);
 
     abstract public void breed(List<Animal> newAnimals); 
     
@@ -64,6 +65,7 @@ public abstract class Animal
      */
     protected void setDead()
     {
+      //  System.out.println("Dead!");
         alive = false;
         if(location != null) {
             field.clear(location);
