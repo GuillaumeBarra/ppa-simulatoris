@@ -115,37 +115,37 @@ public class Fox extends Animal
         }
     }
 
-        /**
-         * Increase the age. This could result in the fox's death.
-         */
-        private void incrementAge()
-        {
-            age++;
-            if(age > MAX_AGE) {
-                System.out.println("Too old!");
-                setDead();
-            }
+    /**
+     * Increase the age. This could result in the fox's death.
+     */
+    private void incrementAge()
+    {
+        age++;
+        if(age > MAX_AGE) {
+            System.out.println("Too old!");
+            setDead();
         }
+    }
 
-        /**
-         * Make this fox more hungry. This could result in the fox's death.
-         */
-        private void incrementHunger()
-        {
-            foodLevel--;
-            if(foodLevel <= 0) {
-                System.out.println("Starved!");
-                setDead();
-            }
+    /**
+     * Make this fox more hungry. This could result in the fox's death.
+     */
+    private void incrementHunger()
+    {
+        foodLevel--;
+        if(foodLevel <= 0) {
+            System.out.println("Starved!");
+            setDead();
         }
+    }
 
-        /**
-         * Look for rabbits adjacent to the current location.
-         * Only the first live rabbit is eaten.
-         * @return Where food was found, or null if it wasn't.
-         */
-        private Location findFood(boolean isNight)
-        {
+    /**
+     * Look for rabbits adjacent to the current location.
+     * Only the first live rabbit is eaten.
+     * @return Where food was found, or null if it wasn't.
+     */
+    private Location findFood(boolean isNight)
+    {
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
