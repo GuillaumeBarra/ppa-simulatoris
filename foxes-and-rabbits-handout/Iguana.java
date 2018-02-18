@@ -3,13 +3,12 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * A simple model of a rabbit.
- * Rabbits age, move, breed, and die.
- * 
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29 (2)
+ * Write a description of class Iguana here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
  */
-public class Rabbit extends Animal
+public class Iguana extends Animal
 {
     // Characteristics shared by all rabbits (class variables).
 
@@ -52,7 +51,7 @@ public class Rabbit extends Animal
      * @param field The field currently occupied.
      * @param location The location within the field.
      */
-    public Rabbit(boolean randomAge, Field field, Location location)
+    public Iguana(boolean randomAge, Field field, Location location)
     {
         super(field, location);
         age = 0;
@@ -65,14 +64,15 @@ public class Rabbit extends Animal
             foodLevel = GRASS_FOOD_VALUE;
         }
     }
-
+    
     /**
      * This is what the rabbit does most of the time - it runs 
      * around. Sometimes it will breed or die of old age.
      * @param newRabbits A list to return newly born rabbits.
      */
-    public void act(List<Organism> newRabbits, boolean isNight)
+    public void act(List<Organism> newIguanas, boolean isNight)
     {
+
         incrementAge();
         incrementHunger();
         if(isAlive()) {
@@ -84,7 +84,7 @@ public class Rabbit extends Animal
 
                     escapeProbability += ESCAPE_PROBABILITY_CHANGE; 
                 }
-                breed(newRabbits);
+                breed(newIguanas);
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
                     // No food found - try to move to a free location.
@@ -155,7 +155,7 @@ public class Rabbit extends Animal
      * New births will be made into free adjacent locations.
      * @param newRabbits A list to return newly born rabbits.
      */
-    public void breed(List<Organism> newRabbits)
+    public void breed(List<Organism> newIguanas)
     {
         String sex = getSex();
         Field field = getField();
@@ -165,15 +165,15 @@ public class Rabbit extends Animal
         while(it.hasNext()){
             Location where = it.next();
             Object animal = field.getObjectAt(where);
-            if(animal instanceof Rabbit){
-                Rabbit rabbit = (Rabbit) animal;
-                if (rabbit.getSex() != sex){
+            if(animal instanceof Iguana){
+                Iguana iguana = (Iguana) animal;
+                if (iguana.getSex() != sex){
                     if (rand.nextDouble() <= BREEDING_PROBABILITY) {
                         int births = rand.nextInt(MAX_LITTER_SIZE) + 1;
                         for(int b = 0; b < births && free.size() > 0; b++) {
                             Location loc = free.remove(0);
-                            Rabbit young = new Rabbit(false, field, loc);
-                            newRabbits.add(young);
+                            Iguana young = new Iguana(false, field, loc);
+                            newIguanas.add(young);
                         }
                     }
                 }

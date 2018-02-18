@@ -36,6 +36,7 @@ public class Time
         assert (increment > 0) : "increment is less than 1!";
         
         minutes = (minutes + increment) % 1440;
+        
     }
     
     /**

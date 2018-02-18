@@ -3,59 +3,58 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * A simple model of a fox.
- * Foxes age, move, eat rabbits, and die.
- * 
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29 (2)
+ * Write a description of class Eagle here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
  */
-public class Fox extends Animal
+public class Eagle extends Animal
 {
-    // Characteristics shared by all foxes (class variables).
+    // Characteristics shared by all eagles (class variables).
 
-    // The probability of a fox catching a prey successfully.
-    private static double huntingProbability = 0.2;
-    // The probability change of a fox catching a prey successfully.
-    private static final double HUNTING_PROBABILITY_CHANGE = 0.2;
-    // The age at which a fox can start to breed.
+    // The probability of an eagle catching a prey successfully.
+    private static double huntingProbability = 0.3;
+    // The probability change of an eagle catching a prey successfully.
+    private static final double HUNTING_PROBABILITY_CHANGE = -0.2;
+    // The age at which an eagle can start to breed.
     private static final int BREEDING_AGE = 15;
-    // The age to which a fox can live.
-    private static final int MAX_AGE = 70;
-    // The likelihood of a fox breeding when it meets another rabbit
-    private static final double BREEDING_PROBABILITY = 0.08;
-    // The number of years before a fax can breed again.
+    // The age to which an eagle can live.
+    private static final int MAX_AGE = 100;
+    // The likelihood of an eagle breeding when it meets another rabbit
+    private static final double BREEDING_PROBABILITY = 0.15;
+    // The number of years before an eagle can breed again.
     private static final int BREEDING_INTERVAL = 9;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single rabbit. In effect, this is the
-    // number of steps a fox can go before it has to eat again.
+    // number of steps an eagle can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 9;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
-    // Wether or not the fox is asleep.
+    // Wether or not an eagle is asleep.
     private  boolean isAsleep = false;
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.2;
     
-    private static final double FOX_CREATION_PROBABILITY = 0.08;
+    private static final double EAGLE_CREATION_PROBABILITY = 0.08;
 
     // Individual characteristics (instance fields).
-    // The fox's age.
+    // an eagle's age.
     private int age;
-    // The age of the fox when it last bred.
+    // The age of an eagle when it last bred.
     private int ageLastBred;
-    // The fox's food level, which is increased by eating rabbits.
+    // An eagle's food level, which is increased by eating rabbits.
     private int foodLevel;
 
     /**
-     * Create a fox. A fox can be created as a new born (age zero
+     * Create an eagle. An eagle can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
      * 
-     * @param randomAge If true, the fox will have random age and hunger level.
+     * @param randomAge If true, the eagle will have random age and hunger level.
      * @param field The field currently occupied.
      * @param location The location within the field.
      */
-    public Fox(boolean randomAge, Field field, Location location)
+    public Eagle(boolean randomAge, Field field, Location location)
     {
         super(field, location);
         if(randomAge) {
@@ -69,13 +68,13 @@ public class Fox extends Animal
     }
 
     /**
-     * This is what the fox does most of the time: it hunts for
+     * This is what the eagle does most of the time: it hunts for
      * rabbits. In the process, it might breed, die of hunger,
      * or die of old age.
      * @param field The field currently occupied.
-     * @param newFoxes A list to return newly born foxes.
+     * @param newEagles A list to return newly born eagles.
      */
-    public void act(List<Organism> newFoxes, boolean isNight)
+    public void act(List<Organism> newEagles, boolean isNight)
     {
         incrementAge();
         incrementHunger();
@@ -94,7 +93,7 @@ public class Fox extends Animal
                     }
                     huntingProbability += HUNTING_PROBABILITY_CHANGE;
                 }
-                breed(newFoxes); 
+                breed(newEagles); 
                 // Move towards a source of food if found.
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
@@ -114,11 +113,11 @@ public class Fox extends Animal
     }
     
     private static double getCreationProbability(){
-        return FOX_CREATION_PROBABILITY;
+        return EAGLE_CREATION_PROBABILITY;
     }
 
     /**
-     * Increase the age. This could result in the fox's death.
+     * Increase the age. This could result in the eagle's death.
      */
     private void incrementAge()
     {
@@ -129,7 +128,7 @@ public class Fox extends Animal
     }
 
     /**
-     * Make this fox more hungry. This could result in the fox's death.
+     * Make this eagle more hungry. This could result in the eagle's death.
      */
     private void incrementHunger()
     {
@@ -169,13 +168,13 @@ public class Fox extends Animal
     }
 
     /**
-     * Check whether or not this fox is to give birth at this step.
+     * Check whether or not this eagle is to give birth at this step.
      * New births will be made into free adjacent locations.
-     * @param newFoxes A list to return newly born foxes.
+     * @param newEagles A list to return newly born eagles.
      */
-    public void breed(List<Organism> newFoxes)
+    public void breed(List<Organism> newEagles)
     {
-        // New foxes are born into adjacent locations.
+        // New eagles are born into adjacent locations.
         // Get a list of adjacent free locations.
         String sex = getSex();
         Field field = getField();
@@ -185,15 +184,15 @@ public class Fox extends Animal
         while(it.hasNext()){
             Location where = it.next();
             Object animal = field.getObjectAt(where);
-            if(animal instanceof Fox){
-                Fox fox = (Fox) animal;
-                if (fox.getSex() != sex){
+            if(animal instanceof Eagle){
+                Eagle eagle = (Eagle) animal;
+                if (eagle.getSex() != sex){
                     if (rand.nextDouble() <= BREEDING_PROBABILITY) {
                         int births = rand.nextInt(MAX_LITTER_SIZE) + 1;
                         for(int b = 0; b < births && free.size() > 0; b++) {
                             Location loc = free.remove(0);
-                            Fox young = new Fox(false, field, loc);
-                            newFoxes.add(young);
+                            Eagle young = new Eagle(false, field, loc);
+                            newEagles.add(young);
                         }
                     }
                 }
@@ -216,10 +215,11 @@ public class Fox extends Animal
     }
 
     /**
-     * A fox can breed if it has reached the breeding age.
+     * An eagle can breed if it has reached the breeding age.
      */
     private boolean canBreed()
     {
         return (age >= BREEDING_AGE) && (age >= ageLastBred + BREEDING_INTERVAL);
     }
 }
+

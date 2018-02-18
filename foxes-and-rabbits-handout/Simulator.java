@@ -28,10 +28,19 @@ public class Simulator
     private static final double FOX_CREATION_PROBABILITY = 0.08;
     // The probability that a rabbit will be created in any given grid position.
     private static final double RABBIT_CREATION_PROBABILITY = 0.15; 
-    private static final double GRASS_CREATION_PROBABILITY = 0.3;
-
+    // The probability that grass will be created in any given grid position.
+    private static final double GRASS_CREATION_PROBABILITY = 0.5;
+    // The probability that an eagle will be created in any given grid position.
+    private static final double EAGLE_CREATION_PROBABILITY = 0.11;
+    // The probability that an eagle will be created in any given grid position.
+    private static final double IGUANA_CREATION_PROBABILITY = 0.13;
+    // The probability that an eagle will be created in any given grid position.
+    private static final double SLOTH_CREATION_PROBABILITY = 0.12;
+    
     // List of animals in the field.
-    private List<Animal> animals;
+    private List<Organism> organisms;
+    // List of organism classes.
+    private List<String> organismClasses;
     // The current state of the field.
     private Field field;
     // The current step of the simulation.
@@ -40,7 +49,7 @@ public class Simulator
     private Time time;
     // A graphical view of the simulation.
     private SimulatorView view;
-    
+
     /**
      * Construct a simulation field with default size.
      */
@@ -48,7 +57,7 @@ public class Simulator
     {
         this(DEFAULT_DEPTH, DEFAULT_WIDTH, DEFAULT_SUNRISE_TIME, DEFAULT_SUNSET_TIME);
     }
-    
+
     /**
      * Create a simulation field with the given size.
      * @param depth Depth of the field. Must be greater than zero.
@@ -62,10 +71,10 @@ public class Simulator
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        
-        animals = new ArrayList<>();
+
+        organisms = new ArrayList<>();
         field = new Field(depth, width);
-        
+
         time = new Time(sunRise, sunSet);
 
         // Create a view of the state of each location in the field.
@@ -73,11 +82,13 @@ public class Simulator
         view.setColor(Rabbit.class, Color.ORANGE);
         view.setColor(Fox.class, Color.BLUE);
         view.setColor(Grass.class, Color.GREEN);
-        
+        view.setColor(Eagle.class, Color.RED);
+        view.setColor(Iguana.class, Color.BLACK);
+        view.setColor(Sloth.class, Color.PINK);
         // Setup a valid starting point.
         reset();
     }
-    
+
     /**
      * Run the simulation from its current state for a reasonably long period,
      * (4000 steps).
@@ -86,7 +97,7 @@ public class Simulator
     {
         simulate(4000);
     }
-    
+
     /**
      * Run the simulation from its current state for the given number of steps.
      * Stop before the given number of steps if it ceases to be viable.
@@ -99,7 +110,7 @@ public class Simulator
             delay(60);   // uncomment this to run more slowly
         }
     }
-    
+
     /**
      * Run the simulation from its current state for a single step.
      * Iterate over the whole field updating the state of each
@@ -110,39 +121,38 @@ public class Simulator
         step++;
         time.incrementTime(TIME_PER_STEP);
         boolean isNight = time.isNight();
-        System.out.println("        " + time.getTime() + time.isNight());
 
         // Provide space for newborn animals.
-        List<Animal> newAnimals = new ArrayList<>();        
+        List<Organism> newOrganisms = new ArrayList<>();        
         // Let all rabbits act.
-        for(Iterator<Animal> it = animals.iterator(); it.hasNext(); ) {
-            Animal animal = it.next();
-            animal.act(newAnimals, isNight);
-            if(! animal.isAlive()) {
+        for(Iterator<Organism> it = organisms.iterator(); it.hasNext(); ) {
+            Organism organism = it.next();
+            organism.act(newOrganisms, isNight);
+            if(! organism.isAlive()) {
                 it.remove();
             }
         }
-               
+
         // Add the newly born foxes and rabbits to the main lists.
-        animals.addAll(newAnimals);
+        organisms.addAll(newOrganisms);
 
         view.showStatus(step, field);
     }
-        
+
     /**
      * Reset the simulation to a starting position.
      */
     public void reset()
     {
         step = 0;
-        animals.clear();
+        organisms.clear();
         populate();
         time.setTime(500);
-        
+
         // Show the starting state in the view.
         view.showStatus(step, field);
     }
-    
+
     /**
      * Randomly populate the field with foxes and rabbits.
      */
@@ -155,18 +165,39 @@ public class Simulator
                 if(rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
                     Fox fox = new Fox(true, field, location);
-                    animals.add(fox);
+                    organisms.add(fox);
                 }
                 else if(rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
                     Rabbit rabbit = new Rabbit(true, field, location);
-                    animals.add(rabbit);
+                    organisms.add(rabbit);
                 }
-                // else leave the location empty.
+                else if(rand.nextDouble() <= EAGLE_CREATION_PROBABILITY) {
+                    Location location = new Location(row, col);
+                    Eagle eagle = new Eagle(true, field, location);
+                    organisms.add(eagle);
+                }
+                else if(rand.nextDouble() <= IGUANA_CREATION_PROBABILITY) {
+                    Location location = new Location(row, col);
+                    Iguana iguana = new Iguana(true, field, location);
+                    organisms.add(iguana);
+                }
+                else if(rand.nextDouble() <= SLOTH_CREATION_PROBABILITY) {
+                    Location location = new Location(row, col);
+                    Sloth sloth = new Sloth(true, field, location);
+                    organisms.add(sloth);
+                }
+                else if(rand.nextDouble() <= GRASS_CREATION_PROBABILITY) {
+                    Location location = new Location(row, col);
+                    Grass grass = new Grass(true, field, location);
+                    organisms.add(grass);
+                    // else leave the location empty.
+                }
+                
             }
         }
     }
-    
+
     /**
      * Pause for a given time.
      * @param millisec  The time to pause for, in milliseconds
