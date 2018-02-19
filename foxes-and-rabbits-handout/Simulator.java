@@ -37,6 +37,9 @@ public class Simulator
     // The probability that an eagle will be created in any given grid position.
     private static final double SLOTH_CREATION_PROBABILITY = 0.12;
     
+    // The probability that it will rain.
+    private static final double RAIN_PROBABILITY = 0.1;
+    
     // List of animals in the field.
     private List<Organism> organisms;
     // List of organism classes.
@@ -49,6 +52,10 @@ public class Simulator
     private Time time;
     // A graphical view of the simulation.
     private SimulatorView view;
+    
+    private Random rand = Randomizer.getRandom();
+    
+    private Weather currentWeather;
 
     /**
      * Construct a simulation field with default size.
@@ -76,6 +83,8 @@ public class Simulator
         field = new Field(depth, width);
 
         time = new Time(sunRise, sunSet);
+        
+        currentWeather = null;
 
         // Create a view of the state of each location in the field.
         view = new SimulatorView(depth, width);
@@ -121,7 +130,19 @@ public class Simulator
         step++;
         time.incrementTime(TIME_PER_STEP);
         boolean isNight = time.isNight();
-
+        
+        if (currentWeather == null){
+            currentWeather = createWeather();
+        } else {
+            currentWeather = updateWeather();
+        }
+        
+        // Upd
+        Weather weather = updateWeather();
+        if (weather != null){
+            weather.updateOrganismsProbabilities();
+        }
+        
         // Provide space for newborn animals.
         List<Organism> newOrganisms = new ArrayList<>();        
         // Let all rabbits act.
@@ -137,6 +158,21 @@ public class Simulator
         organisms.addAll(newOrganisms);
 
         view.showStatus(step, field);
+    }
+    
+    public Weather createWeather(){
+        if (rand.nextDouble() <= RAIN_PROBABILITY) {
+            Rain rain = new Rain();
+            return rain;
+        }
+        return null;
+    }
+    
+    public Weather updateWeather(){
+        if (currentWeather instanceof Rain){
+            Rain rain = (Rain) currentWeather;
+            return rain.updateWeather();
+        }
     }
 
     /**
@@ -158,7 +194,6 @@ public class Simulator
      */
     private void populate()
     {
-        Random rand = Randomizer.getRandom();
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {

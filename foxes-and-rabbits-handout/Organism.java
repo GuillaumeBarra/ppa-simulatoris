@@ -45,7 +45,7 @@ public abstract class Organism
      */
     protected boolean isAlive()
     {
-//        System.out.println("        Alive called!");
+        //        System.out.println("        Alive called!");
         return alive;
     }
 

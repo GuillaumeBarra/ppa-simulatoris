@@ -1,6 +1,8 @@
 import java.util.Random;
 import java.util.List;
 import java.util.Iterator;
+import java.util.HashMap;
+
 
 /**
  * Write a description of class Grass here.
@@ -10,9 +12,11 @@ import java.util.Iterator;
  */
 public class Grass extends Plant
 {
+    private static HashMap<String,Double> probs;
+    
+    private static final double POLLINATION_PROBABILITY = 0.15;
     private static final int MAX_AGE = 15;
     private static final int FOOD_VALUE = 4;
-    private static final double POLLINATION_PROBABILITY = 0.15;
     private static final double POLLINATION_AGE = 3;
     private static final int MAX_LITTER_SIZE = 4; //NOTE better name
     private static final Random rand = Randomizer.getRandom();
@@ -30,15 +34,28 @@ public class Grass extends Plant
         else {
             age = 0;
         }
+        
+        probs = new HashMap<String,Double>();
+        probs.put("pollinationProbability", 0.15);
     }
-
+    
+    public static void updateProbabilities(HashMap<String, Double> newProbs){
+        for (String k : newProbs.keySet()){
+            probs.put(k, newProbs.get(k));
+        }
+    }
+    
+    public static void resetProbabilities(){
+        probs.put("pollinationProbability", POLLINATION_PROBABILITY);
+    }
+    
     public void breed(List<Organism> newGrasses)
     {
         if (isAlive()){
             Field field = getField();
             List<Location> free = field.getFreeAdjacentLocations(getLocation());
             if (age >= POLLINATION_AGE) {
-                if (rand.nextDouble() <= POLLINATION_PROBABILITY){
+                if (rand.nextDouble() <= probs.get("polinationProbability")){
                     int births = rand.nextInt(MAX_LITTER_SIZE) + 1;
                     for(int b = 0; b < births && free.size() > 0; b++) {
                         Location loc = free.remove(0);
