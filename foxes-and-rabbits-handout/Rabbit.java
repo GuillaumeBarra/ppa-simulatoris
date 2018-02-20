@@ -129,9 +129,6 @@ public class Rabbit extends Animal
             if(organism instanceof Grass) {
                 Grass grass = (Grass) organism;
                 if(grass.isAlive()) { 
-                    if (organismsInfected.contains(grass)){
-                                organismsInfected.remove(grass);
-                            }
                     grass.setDead();
                     foodLevel = GRASS_FOOD_VALUE;
                     return where;

@@ -127,10 +127,7 @@ public class Sloth extends Animal
             Object organism = field.getObjectAt(where);
             if(organism instanceof Grass) {
                 Grass grass = (Grass) organism;
-                if(grass.isAlive()) { 
-                    if (organismsInfected.contains(grass)){
-                                organismsInfected.remove(grass);
-                            }
+                if(grass.isAlive()) {
                     grass.setDead();
                     foodLevel = GRASS_FOOD_VALUE;
                     return where;

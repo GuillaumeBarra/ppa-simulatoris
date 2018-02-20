@@ -51,6 +51,8 @@ public class Simulator
     private Time time;
     // A graphical view of the simulation.
     private SimulatorView view;
+    
+    private boolean anthraxCreated;
 
     /**
      * Construct a simulation field with default size.
@@ -195,7 +197,8 @@ public class Simulator
                     organisms.add(grass);
                     // else leave the location empty.
                 }
-                else if(rand.nextDouble() <= ANTHRAX_CREATION_PROBABILITY) {
+                else if(rand.nextDouble() <= ANTHRAX_CREATION_PROBABILITY && !anthraxCreated) {
+                    anthraxCreated = true;
                     Location location = new Location(row, col);
                     Anthrax anthrax = new Anthrax(field, location);
                     organisms.add(anthrax);

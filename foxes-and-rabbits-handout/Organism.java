@@ -18,7 +18,7 @@ public abstract class Organism
     private boolean infected;
 
     // A list of organisms infected by anthrax.
-    protected static ArrayList<Organism> organismsInfected;
+    //protected static ArrayList<Organism> organismsInfected;
     /**
      * Create a new animal at location in field.
      * 
@@ -31,7 +31,7 @@ public abstract class Organism
         this.field = field;
         setLocation(location);
         infected = false;
-        organismsInfected = new ArrayList<Organism>();
+      //  organismsInfected = new ArrayList<Organism>();
     }
 
     /**

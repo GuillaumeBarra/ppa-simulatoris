@@ -156,9 +156,6 @@ public class Eagle extends Animal
                 if(rabbit.isAlive()) { 
                     if (rand.nextDouble() <= huntingProbability) {
                         if (rand.nextDouble() <= rabbit.getEscapeProbability(isNight)) { // NOTE: review this.
-                            if (organismsInfected.contains(rabbit)){
-                                organismsInfected.remove(rabbit);
-                            }
                             rabbit.setDead();
                             foodLevel = RABBIT_FOOD_VALUE;
                             return where;
