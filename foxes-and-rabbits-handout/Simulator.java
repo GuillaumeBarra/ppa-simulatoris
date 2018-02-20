@@ -37,6 +37,8 @@ public class Simulator
     // The probability that an eagle will be created in any given grid position.
     private static final double SLOTH_CREATION_PROBABILITY = 0.12;
     
+    private static final double ANTHRAX_CREATION_PROBABILITY = 0.005;
+    
     // List of animals in the field.
     private List<Organism> organisms;
     // List of organism classes.
@@ -121,7 +123,7 @@ public class Simulator
         step++;
         time.incrementTime(TIME_PER_STEP);
         boolean isNight = time.isNight();
-
+        
         // Provide space for newborn animals.
         List<Organism> newOrganisms = new ArrayList<>();        
         // Let all rabbits act.
@@ -193,7 +195,11 @@ public class Simulator
                     organisms.add(grass);
                     // else leave the location empty.
                 }
-                
+                else if(rand.nextDouble() <= ANTHRAX_CREATION_PROBABILITY) {
+                    Location location = new Location(row, col);
+                    Anthrax anthrax = new Anthrax(field, location);
+                    organisms.add(anthrax);
+                }
             }
         }
     }

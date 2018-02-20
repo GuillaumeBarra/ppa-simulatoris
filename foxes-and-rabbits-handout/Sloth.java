@@ -16,19 +16,19 @@ public class Sloth extends Animal
     private static double escapeProbability = 0.6;
     // The probability change of a rabbit escaping from a predator.
     private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
-    // The age at which a rabbit can start to breed.
-    private static final int BREEDING_AGE = 2;
+    // The age at which a rabbit can start to procreate.
+    private static final int PROCREATING_AGE = 2;
     // The age to which a rabbit can live.
     private static final int MAX_AGE = 40;
-    // The likelihood of a rabbit breeding when it meets another rabbit.
-    private static final double BREEDING_PROBABILITY = 0.12;
-    // The number of years before a rabbit can breed again.
-    private static final int BREEDING_INTERVAL = 3;
+    // The likelihood of a rabbit procreateing when it meets another rabbit.
+    private static final double PROCREATING_PROBABILITY = 0.12;
+    // The number of years before a rabbit can procreate again.
+    private static final int PROCREATING_INTERVAL = 3;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
     // The huniting 
     private static final int GRASS_FOOD_VALUE = 10;
-    // A shared random number generator to control breeding.
+    // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
     // Wether or not the rabbit is asleep.
     private boolean isAsleep = false;
@@ -67,7 +67,7 @@ public class Sloth extends Animal
     
     /**
      * This is what the rabbit does most of the time - it runs 
-     * around. Sometimes it will breed or die of old age.
+     * around. Sometimes it will procreate or die of old age.
      * @param newRabbits A list to return newly born rabbits.
      */
     public void act(List<Organism> newSloths, boolean isNight)
@@ -83,7 +83,7 @@ public class Sloth extends Animal
 
                     escapeProbability += ESCAPE_PROBABILITY_CHANGE; 
                 }
-                breed(newSloths);
+                procreate(newSloths);
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
                     // No food found - try to move to a free location.
@@ -128,6 +128,9 @@ public class Sloth extends Animal
             if(organism instanceof Grass) {
                 Grass grass = (Grass) organism;
                 if(grass.isAlive()) { 
+                    if (organismsInfected.contains(grass)){
+                                organismsInfected.remove(grass);
+                            }
                     grass.setDead();
                     foodLevel = GRASS_FOOD_VALUE;
                     return where;
@@ -154,7 +157,7 @@ public class Sloth extends Animal
      * New births will be made into free adjacent locations.
      * @param newRabbits A list to return newly born rabbits.
      */
-    public void breed(List<Organism> newSloths)
+    public void procreate(List<Organism> newSloths)
     {
         String sex = getSex();
         Field field = getField();
@@ -167,7 +170,7 @@ public class Sloth extends Animal
             if(animal instanceof Sloth){
                 Sloth sloth = (Sloth) animal;
                 if (sloth.getSex() != sex){
-                    if (rand.nextDouble() <= BREEDING_PROBABILITY) {
+                    if (rand.nextDouble() <= PROCREATING_PROBABILITY) {
                         int births = rand.nextInt(MAX_LITTER_SIZE) + 1;
                         for(int b = 0; b < births && free.size() > 0; b++) {
                             Location loc = free.remove(0);
@@ -181,12 +184,12 @@ public class Sloth extends Animal
     }
 
     /**
-     * A rabbit can breed if it has reached the breeding age.
-     * @return true if the rabbit can breed, false otherwise.
+     * A rabbit can procreate if it has reached the procreateing age.
+     * @return true if the rabbit can procreate, false otherwise.
      */
-    private boolean canBreed()
+    private boolean canProcreate()
     {
-        return (age >= BREEDING_AGE) && (age >= ageLastBred + BREEDING_INTERVAL);
+        return (age >= PROCREATING_AGE) && (age >= ageLastBred + PROCREATING_INTERVAL);
     }
 
     /**

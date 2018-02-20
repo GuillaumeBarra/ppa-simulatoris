@@ -17,26 +17,26 @@ public class Fox extends Animal
     private static double huntingProbability = 0.2;
     // The probability change of a fox catching a prey successfully.
     private static final double HUNTING_PROBABILITY_CHANGE = 0.2;
-    // The age at which a fox can start to breed.
-    private static final int BREEDING_AGE = 15;
+    // The age at which a fox can start to procreate.
+    private static final int PROCREATING_AGE = 15;
     // The age to which a fox can live.
     private static final int MAX_AGE = 70;
-    // The likelihood of a fox breeding when it meets another rabbit
-    private static final double BREEDING_PROBABILITY = 0.08;
-    // The number of years before a fax can breed again.
-    private static final int BREEDING_INTERVAL = 9;
+    // The likelihood of a fox procreating when it meets another rabbit
+    private static final double PROCREATING_PROBABILITY = 0.08;
+    // The number of years before a fax can procreate again.
+    private static final int PROCREATING_INTERVAL = 9;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single rabbit. In effect, this is the
     // number of steps a fox can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 9;
-    // A shared random number generator to control breeding.
+    // A shared random number generator to control procreating.
     private static final Random rand = Randomizer.getRandom();
     // Wether or not the fox is asleep.
     private  boolean isAsleep = false;
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.2;
-    
+
     private static final double FOX_CREATION_PROBABILITY = 0.08;
 
     // Individual characteristics (instance fields).
@@ -70,7 +70,7 @@ public class Fox extends Animal
 
     /**
      * This is what the fox does most of the time: it hunts for
-     * rabbits. In the process, it might breed, die of hunger,
+     * rabbits. In the process, it might procreate, die of hunger,
      * or die of old age.
      * @param field The field currently occupied.
      * @param newFoxes A list to return newly born foxes.
@@ -94,7 +94,7 @@ public class Fox extends Animal
                     }
                     huntingProbability += HUNTING_PROBABILITY_CHANGE;
                 }
-                breed(newFoxes); 
+                procreate(newFoxes); 
                 // Move towards a source of food if found.
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
@@ -112,7 +112,7 @@ public class Fox extends Animal
             }
         }
     }
-    
+
     private static double getCreationProbability(){
         return FOX_CREATION_PROBABILITY;
     }
@@ -157,6 +157,9 @@ public class Fox extends Animal
                 if(rabbit.isAlive()) { 
                     if (rand.nextDouble() <= huntingProbability) {
                         if (rand.nextDouble() <= rabbit.getEscapeProbability(isNight)) { // NOTE: review this.
+                            if (organismsInfected.contains(rabbit)){
+                                organismsInfected.remove(rabbit);
+                            }
                             rabbit.setDead();
                             foodLevel = RABBIT_FOOD_VALUE;
                             return where;
@@ -165,6 +168,7 @@ public class Fox extends Animal
                 }
             }
         }
+
         return null;
     }
 
@@ -173,7 +177,7 @@ public class Fox extends Animal
      * New births will be made into free adjacent locations.
      * @param newFoxes A list to return newly born foxes.
      */
-    public void breed(List<Organism> newFoxes)
+    public void procreate(List<Organism> newFoxes)
     {
         // New foxes are born into adjacent locations.
         // Get a list of adjacent free locations.
@@ -188,7 +192,7 @@ public class Fox extends Animal
             if(animal instanceof Fox){
                 Fox fox = (Fox) animal;
                 if (fox.getSex() != sex){
-                    if (rand.nextDouble() <= BREEDING_PROBABILITY) {
+                    if (rand.nextDouble() <= PROCREATING_PROBABILITY) {
                         int births = rand.nextInt(MAX_LITTER_SIZE) + 1;
                         for(int b = 0; b < births && free.size() > 0; b++) {
                             Location loc = free.remove(0);
@@ -203,23 +207,23 @@ public class Fox extends Animal
 
     /**
      * Generate a number representing the number of births,
-     * if it can breed.
+     * if it can procreate.
      * @return The number of births (may be zero).
      */
-    private int breed()
+    private int procreate()
     {
         int births = 0;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
+        if(canProcreate() && rand.nextDouble() <= PROCREATING_PROBABILITY) {
             births = rand.nextInt(MAX_LITTER_SIZE) + 1;
         }
         return births;
     }
 
     /**
-     * A fox can breed if it has reached the breeding age.
+     * A fox can procreate if it has reached the procreating age.
      */
-    private boolean canBreed()
+    private boolean canProcreate()
     {
-        return (age >= BREEDING_AGE) && (age >= ageLastBred + BREEDING_INTERVAL);
+        return (age >= PROCREATING_AGE) && (age >= ageLastBred + PROCREATING_INTERVAL);
     }
 }

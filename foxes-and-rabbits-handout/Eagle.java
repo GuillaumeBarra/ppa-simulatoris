@@ -13,23 +13,23 @@ public class Eagle extends Animal
     // Characteristics shared by all eagles (class variables).
 
     // The probability of an eagle catching a prey successfully.
-    private static double huntingProbability = 0.3;
+    private static double huntingProbability = 0.1;
     // The probability change of an eagle catching a prey successfully.
     private static final double HUNTING_PROBABILITY_CHANGE = -0.2;
-    // The age at which an eagle can start to breed.
-    private static final int BREEDING_AGE = 15;
+    // The age at which an eagle can start to procreate.
+    private static final int PROCREATING_AGE = 15;
     // The age to which an eagle can live.
-    private static final int MAX_AGE = 100;
-    // The likelihood of an eagle breeding when it meets another rabbit
-    private static final double BREEDING_PROBABILITY = 0.15;
-    // The number of years before an eagle can breed again.
-    private static final int BREEDING_INTERVAL = 9;
+    private static final int MAX_AGE = 20;
+    // The likelihood of an eagle procreateing when it meets another rabbit
+    private static final double PROCREATING_PROBABILITY = 0.05;
+    // The number of years before an eagle can procreate again.
+    private static final int PROCREATING_INTERVAL = 9;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
     // The food value of a single rabbit. In effect, this is the
     // number of steps an eagle can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 9;
-    // A shared random number generator to control breeding.
+    // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
     // Wether or not an eagle is asleep.
     private  boolean isAsleep = false;
@@ -69,7 +69,7 @@ public class Eagle extends Animal
 
     /**
      * This is what the eagle does most of the time: it hunts for
-     * rabbits. In the process, it might breed, die of hunger,
+     * rabbits. In the process, it might procreate, die of hunger,
      * or die of old age.
      * @param field The field currently occupied.
      * @param newEagles A list to return newly born eagles.
@@ -93,7 +93,7 @@ public class Eagle extends Animal
                     }
                     huntingProbability += HUNTING_PROBABILITY_CHANGE;
                 }
-                breed(newEagles); 
+                procreate(newEagles); 
                 // Move towards a source of food if found.
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
@@ -156,6 +156,9 @@ public class Eagle extends Animal
                 if(rabbit.isAlive()) { 
                     if (rand.nextDouble() <= huntingProbability) {
                         if (rand.nextDouble() <= rabbit.getEscapeProbability(isNight)) { // NOTE: review this.
+                            if (organismsInfected.contains(rabbit)){
+                                organismsInfected.remove(rabbit);
+                            }
                             rabbit.setDead();
                             foodLevel = RABBIT_FOOD_VALUE;
                             return where;
@@ -172,7 +175,7 @@ public class Eagle extends Animal
      * New births will be made into free adjacent locations.
      * @param newEagles A list to return newly born eagles.
      */
-    public void breed(List<Organism> newEagles)
+    public void procreate(List<Organism> newEagles)
     {
         // New eagles are born into adjacent locations.
         // Get a list of adjacent free locations.
@@ -187,7 +190,7 @@ public class Eagle extends Animal
             if(animal instanceof Eagle){
                 Eagle eagle = (Eagle) animal;
                 if (eagle.getSex() != sex){
-                    if (rand.nextDouble() <= BREEDING_PROBABILITY) {
+                    if (rand.nextDouble() <= PROCREATING_PROBABILITY) {
                         int births = rand.nextInt(MAX_LITTER_SIZE) + 1;
                         for(int b = 0; b < births && free.size() > 0; b++) {
                             Location loc = free.remove(0);
@@ -202,24 +205,24 @@ public class Eagle extends Animal
 
     /**
      * Generate a number representing the number of births,
-     * if it can breed.
+     * if it can procreate.
      * @return The number of births (may be zero).
      */
-    private int breed()
+    private int procreate()
     {
         int births = 0;
-        if(canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
+        if(canProcreate() && rand.nextDouble() <= PROCREATING_PROBABILITY) {
             births = rand.nextInt(MAX_LITTER_SIZE) + 1;
         }
         return births;
     }
 
     /**
-     * An eagle can breed if it has reached the breeding age.
+     * An eagle can procreate if it has reached the procreateing age.
      */
-    private boolean canBreed()
+    private boolean canProcreate()
     {
-        return (age >= BREEDING_AGE) && (age >= ageLastBred + BREEDING_INTERVAL);
+        return (age >= PROCREATING_AGE) && (age >= ageLastBred + PROCREATING_INTERVAL);
     }
 }
 

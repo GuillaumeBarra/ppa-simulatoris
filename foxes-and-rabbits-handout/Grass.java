@@ -12,8 +12,8 @@ public class Grass extends Plant
 {
     private static final int MAX_AGE = 15;
     private static final int FOOD_VALUE = 4;
-    private static final double POLLINATION_PROBABILITY = 0.15;
-    private static final double POLLINATION_AGE = 3;
+    private static final double PROCREATING_PROBABILITY = 0.15;
+    private static final double PROCREATING_AGE = 3;
     private static final int MAX_LITTER_SIZE = 4; //NOTE better name
     private static final Random rand = Randomizer.getRandom();
     private int age;
@@ -32,13 +32,13 @@ public class Grass extends Plant
         }
     }
 
-    public void breed(List<Organism> newGrasses)
+    public void procreate(List<Organism> newGrasses)
     {
         if (isAlive()){
             Field field = getField();
             List<Location> free = field.getFreeAdjacentLocations(getLocation());
-            if (age >= POLLINATION_AGE) {
-                if (rand.nextDouble() <= POLLINATION_PROBABILITY){
+            if (age >= PROCREATING_AGE) {
+                if (rand.nextDouble() <= PROCREATING_PROBABILITY){
                     int births = rand.nextInt(MAX_LITTER_SIZE) + 1;
                     for(int b = 0; b < births && free.size() > 0; b++) {
                         Location loc = free.remove(0);
@@ -63,6 +63,6 @@ public class Grass extends Plant
 
     public void act(List<Organism> newGrasses, boolean isNight){
         incrementAge();
-        breed(newGrasses);
+        procreate(newGrasses);
     }
 }

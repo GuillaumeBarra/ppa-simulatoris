@@ -1,5 +1,5 @@
 import java.util.List;
-
+import java.util.ArrayList;
 /**
  * Abstract class Organism - write a description of the class here
  *
@@ -14,7 +14,11 @@ public abstract class Organism
     private Field field;
     // The animal's position in the field.
     private Location location;
+    
+    private boolean infected;
 
+    // A list of organisms infected by anthrax.
+    protected static ArrayList<Organism> organismsInfected;
     /**
      * Create a new animal at location in field.
      * 
@@ -26,6 +30,8 @@ public abstract class Organism
         alive = true;
         this.field = field;
         setLocation(location);
+        infected = false;
+        organismsInfected = new ArrayList<Organism>();
     }
 
     /**
@@ -37,7 +43,7 @@ public abstract class Organism
      */
     abstract public void act(List<Organism> newOrganisms, boolean isNight);
 
-    abstract public void breed(List<Organism> newOrganism); 
+    abstract public void procreate(List<Organism> newOrganism); 
 
     /**
      * Check whether the animal is alive or not.
@@ -45,18 +51,26 @@ public abstract class Organism
      */
     protected boolean isAlive()
     {
-//        System.out.println("        Alive called!");
         return alive;
     }
 
+    /**
+     * Check whether the animal is alive or not.
+     * @return true if the animal is still alive.
+     */
+    protected boolean isInfected()
+    {
+        return infected;
+    }
+    
     /**
      * Indicate that the animal is no longer alive.
      * It is removed from the field.
      */
     protected void setDead()
     {
-        //  System.out.println("Dead!");
         alive = false;
+        infected = false;
         if(location != null) {
             field.clear(location);
             location = null;
