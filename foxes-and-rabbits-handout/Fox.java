@@ -30,6 +30,7 @@ public class Fox extends Animal
     // The food value of a single rabbit. In effect, this is the
     // number of steps a fox can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 9;
+    private static final int SLOTH_FOOD_VALUE = 6;
     // A shared random number generator to control procreating.
     private static final Random rand = Randomizer.getRandom();
     // Wether or not the fox is asleep.
@@ -60,11 +61,11 @@ public class Fox extends Animal
         super(field, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
-            foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
+            foodLevel = rand.nextInt(RABBIT_FOOD_VALUE + SLOTH_FOOD_VALUE);
         }
         else {
             age = 0;
-            foodLevel = RABBIT_FOOD_VALUE;
+            foodLevel = RABBIT_FOOD_VALUE + SLOTH_FOOD_VALUE; // could be an issue
         }
     }
 
@@ -162,10 +163,20 @@ public class Fox extends Animal
                             return where;
                         }
                     }
+                };
+            } else if (animal instanceof Sloth){
+                Sloth sloth = (Sloth) animal;
+                if(sloth.isAlive()) { 
+                    if (rand.nextDouble() <= huntingProbability) {
+                        if (rand.nextDouble() <= sloth.getEscapeProbability(isNight)) { // NOTE: review this.
+                            sloth.setDead();
+                            foodLevel = SLOTH_FOOD_VALUE;
+                            return where;
+                        }
+                    }
                 }
             }
         }
-
         return null;
     }
 
@@ -202,6 +213,8 @@ public class Fox extends Animal
         }
     }
 
+    
+    // THIS METHOD CAN BE DELETED   
     /**
      * Generate a number representing the number of births,
      * if it can procreate.

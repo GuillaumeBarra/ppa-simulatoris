@@ -29,6 +29,7 @@ public class Eagle extends Animal
     // The food value of a single rabbit. In effect, this is the
     // number of steps an eagle can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 9;
+    private static final int IGUANA_FOOD_VALUE = 12;
     // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
     // Wether or not an eagle is asleep.
@@ -59,11 +60,11 @@ public class Eagle extends Animal
         super(field, location);
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
-            foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
+            foodLevel = rand.nextInt(RABBIT_FOOD_VALUE + IGUANA_FOOD_VALUE);
         }
         else {
             age = 0;
-            foodLevel = RABBIT_FOOD_VALUE;
+            foodLevel = RABBIT_FOOD_VALUE + IGUANA_FOOD_VALUE;
         }
     }
 
@@ -162,6 +163,17 @@ public class Eagle extends Animal
                         }
                     }
                 }
+            } else if(animal instanceof Iguana) {
+                Iguana iguana = (Iguana) animal;
+                if(iguana.isAlive()) { 
+                    if (rand.nextDouble() <= huntingProbability) {
+                        if (rand.nextDouble() <= iguana.getEscapeProbability(isNight)) { // NOTE: review this.
+                            iguana.setDead();
+                            foodLevel = IGUANA_FOOD_VALUE;
+                            return where;
+                        }
+                    }
+                }
             }
         }
         return null;
@@ -200,6 +212,7 @@ public class Eagle extends Animal
         }
     }
 
+    // revie this   method 1!!!!!
     /**
      * Generate a number representing the number of births,
      * if it can procreate.

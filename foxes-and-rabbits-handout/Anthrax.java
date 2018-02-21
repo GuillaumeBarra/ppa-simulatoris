@@ -15,7 +15,7 @@ public class Anthrax extends Organism
     private static final Random rand = Randomizer.getRandom();
 
     private static final double INFECTION_PROBABILITY = 0.9;
-    private static final double DEAD_PROBABILITY = 0.1;
+    private static final double DEAD_PROBABILITY = 0.9;
     private static final int PROCREATION_THRESHOLD = 10;
 
     protected static ArrayList<Organism> organismsInfected;
@@ -61,7 +61,7 @@ public class Anthrax extends Organism
 
         ArrayList<Organism> organismsToRemove = new ArrayList<Organism>();
         for (Organism infected : organismsInfected){
-                if (rand.nextDouble() <= DEAD_PROBABILITY){
+                if (rand.nextDouble() <= DEAD_PROBABILITY && !(infected instanceof Anthrax)){ // the second bolean condition should not need to exist if the logic in the constructor works.
                     System.out.println("        infected dead");
                     System.out.println(infected);
                     infected.setDead();
