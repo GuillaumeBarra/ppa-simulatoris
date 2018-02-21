@@ -14,9 +14,8 @@ public class Anthrax extends Organism
     // A shared random number generator to control procreating.
     private static final Random rand = Randomizer.getRandom();
 
-    private static double infectionProbability = 0.9;
-    private static final double DEAD_PROBABILITY = 0.9;
-    private static final int PROCREATION_THRESHOLD = 10;
+    private static double infectionProbability = 0.5;
+    private static final double DEAD_PROBABILITY = 0.3;
 
     protected static ArrayList<Organism> organismsInfected;
     //private static int numberOfAnthraxInstances = 0;
@@ -38,6 +37,10 @@ public class Anthrax extends Organism
         organismsInfected.add(this);
         procreate(organismsInfected);
         organismsInfected.remove(this);
+    }
+    
+    public static int getOrganismsInfectedSize(){
+        return organismsInfected.size();
     }
 
     public void act(List<Organism> newAnthrax, boolean isNight){

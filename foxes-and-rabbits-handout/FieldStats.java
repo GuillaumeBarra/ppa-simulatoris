@@ -44,6 +44,8 @@ public class FieldStats
             buffer.append(info.getCount());
             buffer.append(' ');
         }
+        buffer.append(' ');
+        buffer.append("Infected: " + Anthrax.getOrganismsInfectedSize());
         return buffer.toString();
     }
     

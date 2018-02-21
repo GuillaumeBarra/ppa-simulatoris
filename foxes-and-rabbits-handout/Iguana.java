@@ -13,25 +13,24 @@ public class Iguana extends Animal
     // Characteristics shared by all rabbits (class variables).
 
     // The probability of a rabbit escaping from a predator.
-    private static double escapeProbability = 0.6;
+    private static double escapeProbability = 0.3;
     // The probability change of a rabbit escaping from a predator.
     private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
     // The age at which a rabbit can start to procreate.
-    private static final int PROCREATING_AGE = 2;
+    private static final int PROCREATING_AGE = 5;
     // The age to which a rabbit can live.
-    private static final int MAX_AGE = 40;
+    private static final int MAX_AGE = 30;
     // The likelihood of a rabbit procreateing when it meets another rabbit.
-    private static final double PROCREATING_PROBABILITY = 0.12;
+    private static final double PROCREATING_PROBABILITY = 0.08;
     // The number of years before a rabbit can procreate again.
-    private static final int PROCREATING_INTERVAL = 3;
+    private static final int PROCREATING_INTERVAL = 6;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 4;
+    private static final int MAX_LITTER_SIZE = 2;
     // The huniting 
     private static final int GRASS_FOOD_VALUE = 10;
     // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
     // Wether or not the rabbit is asleep.
-    private boolean isAsleep = false;
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.5;
 
@@ -42,6 +41,7 @@ public class Iguana extends Animal
     // The age of the rabbit when it last bred.
     private int ageLastBred;
     private int foodLevel;
+    private boolean isAsleep;
 
     /**
      * Create a new rabbit. A rabbit may be created with age
@@ -58,10 +58,12 @@ public class Iguana extends Animal
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
             foodLevel = rand.nextInt(GRASS_FOOD_VALUE);
+            isAsleep = rand.nextBoolean();
         }
         else {
             age = 0;
             foodLevel = GRASS_FOOD_VALUE;
+            isAsleep = false;
         }
     }
     
@@ -105,7 +107,11 @@ public class Iguana extends Animal
      */
     private void incrementHunger()
     {
-        foodLevel--;
+        if (isAsleep) {
+            foodLevel -= 0.5;
+        } else {
+            foodLevel--;
+        }
         if(foodLevel <= 0) {
             setDead();
         }

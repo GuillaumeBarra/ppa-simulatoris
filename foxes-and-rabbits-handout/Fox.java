@@ -16,7 +16,7 @@ public class Fox extends Animal
     // The probability of a fox catching a prey successfully.
     private static double huntingProbability = 0.2;
     // The probability change of a fox catching a prey successfully.
-    private static final double HUNTING_PROBABILITY_CHANGE = 0.2;
+    private static final double HUNTING_PROBABILITY_CHANGE = 0.1;
     // The age at which a fox can start to procreate.
     private static final int PROCREATING_AGE = 15;
     // The age to which a fox can live.
@@ -30,13 +30,13 @@ public class Fox extends Animal
     // The food value of a single rabbit. In effect, this is the
     // number of steps a fox can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 9;
-    private static final int SLOTH_FOOD_VALUE = 6;
+    private static final int SLOTH_FOOD_VALUE = 4;
     // A shared random number generator to control procreating.
     private static final Random rand = Randomizer.getRandom();
     // Wether or not the fox is asleep.
     private  boolean isAsleep = false;
     // The probability that the animal falls asleep.
-    private static final double SLEEP_PROBABILITY = 0.2;
+    private static final double SLEEP_PROBABILITY = 0.5;
 
     private static final double FOX_CREATION_PROBABILITY = 0.08;
 

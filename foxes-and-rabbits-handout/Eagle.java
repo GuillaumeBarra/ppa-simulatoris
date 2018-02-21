@@ -13,13 +13,13 @@ public class Eagle extends Animal
     // Characteristics shared by all eagles (class variables).
 
     // The probability of an eagle catching a prey successfully.
-    private static double huntingProbability = 0.1;
+    private static double huntingProbability = 0.4;
     // The probability change of an eagle catching a prey successfully.
     private static final double HUNTING_PROBABILITY_CHANGE = -0.2;
     // The age at which an eagle can start to procreate.
     private static final int PROCREATING_AGE = 15;
     // The age to which an eagle can live.
-    private static final int MAX_AGE = 20;
+    private static final int MAX_AGE = 60;
     // The likelihood of an eagle procreateing when it meets another rabbit
     private static final double PROCREATING_PROBABILITY = 0.05;
     // The number of years before an eagle can procreate again.
@@ -35,7 +35,7 @@ public class Eagle extends Animal
     // Wether or not an eagle is asleep.
     private  boolean isAsleep = false;
     // The probability that the animal falls asleep.
-    private static final double SLEEP_PROBABILITY = 0.2;
+    private static final double SLEEP_PROBABILITY = 0.5;
 
     private static final double EAGLE_CREATION_PROBABILITY = 0.08;
 
