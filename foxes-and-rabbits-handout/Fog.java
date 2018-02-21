@@ -17,11 +17,11 @@ public class Fog extends Weather
     private static final double RABBIT_ESCAPE_PROBABILITY = 0.3;
     
     /**
-     * Constructor for objects of class Rain
+     * Constructor for objects of class Fog
      */
-    public Fog()
+    public Fog(boolean isNight)
     {
-        super();
+        super(isNight);
         age = 0;
         setProbabilities(false);
     }
@@ -31,11 +31,11 @@ public class Fog extends Weather
         if (reset) {
                 Eagle.setHuntingProbability(Eagle.getHuntingProbability() - EAGLE_HUNTING_PROBABILITY);
                 Fox.setHuntingProbability(Fox.getHuntingProbability() - FOX_HUNTING_PROBABILITY);
-                Rabbit.setEscapeProbability(Rabbit.getEscapeProbability() - RABBIT_ESCAPE_PROBABILITY);
+                Rabbit.setEscapeProbability(Rabbit.getEscapeProbability(isNight) - RABBIT_ESCAPE_PROBABILITY);
         } else {
             Eagle.setHuntingProbability(Eagle.getHuntingProbability() + EAGLE_HUNTING_PROBABILITY);
             Fox.setHuntingProbability(Fox.getHuntingProbability() + FOX_HUNTING_PROBABILITY);
-            Rabbit.setEscapeProbability(Rabbit.getEscapeProbability() + RABBIT_ESCAPE_PROBABILITY);
+            Rabbit.setEscapeProbability(Rabbit.getEscapeProbability(isNight) + RABBIT_ESCAPE_PROBABILITY);
         }
     }
     

@@ -36,16 +36,16 @@ public class Simulator
     private static final double IGUANA_CREATION_PROBABILITY = 0.13;
     // The probability that an eagle will be created in any given grid position.
     private static final double SLOTH_CREATION_PROBABILITY = 0.12;
-    
+
     private static final double ANTHRAX_CREATION_PROBABILITY = 0.005;
-    
+
     private static final double RAIN_PROBABILITY = 0.2;
     private static final double FOG_PROBABILITY = 0.1;
     private static boolean isRaining = false;
     private static boolean isFoggy = false;
     // List of animals in the field.
     private List<Organism> organisms;
-    
+
     private List<Weather> occuringWeather;
     // List of organism classes.
     private List<String> organismClasses;
@@ -57,7 +57,7 @@ public class Simulator
     private Time time;
     // A graphical view of the simulation.
     private SimulatorView view;
-    
+
     private boolean anthraxCreated;
 
     /**
@@ -132,8 +132,8 @@ public class Simulator
         step++;
         time.incrementTime(TIME_PER_STEP);
         boolean isNight = time.isNight();
-        updateWeather();
-        
+        updateWeather(isNight);
+
         // Provide space for newborn animals.
         List<Organism> newOrganisms = new ArrayList<>();        
         // Let all rabbits act.
@@ -150,10 +150,10 @@ public class Simulator
 
         view.showStatus(step, field);
     }
-    
-    private void updateWeather(){
-        createWeather();
-        
+
+    private void updateWeather(boolean isNight){
+        createWeather(isNight);
+
         List<Weather> weatherToRemove = new ArrayList<Weather>();
         for (Weather weatherInstance : occuringWeather){
             weatherInstance.updateWeather();
@@ -172,25 +172,24 @@ public class Simulator
         step = 0;
         organisms.clear();
         populate();
-        createWeather();
+        createWeather(time.isNight());
         time.setTime(500);
 
         // Show the starting state in the view.
         view.showStatus(step, field);
     }
-    
-    private void createWeather(){
+
+    private void createWeather(boolean isNight){
         Random rand = Randomizer.getRandom(); // This is being used in mulitple methods. Declare it for the whole class.
         if (rand.nextDouble() <= RAIN_PROBABILITY && !isRaining){
-            Rain rain = new Rain();
+            Rain rain = new Rain(isNight);
             isRaining = true;
             occuringWeather.add(rain);
+        } else if(rand.nextDouble() <= FOG_PROBABILITY && !isFoggy){
+            Fog fog = new Fog(isNight);
+            isFoggy = true;
+            occuringWeather.add(fog);
         }
-        // } else if(rand.nextDouble() <= FOG_PROBABILITY && !isFoggy){
-            // Fog fog = new fog();
-            // isFoggy = true;
-            // occuringWeather.add(fog);
-        // }
     }
 
     /**

@@ -199,7 +199,7 @@ public class Sloth extends Animal
      * Get the escape probability of a rabbit.
      * @return the escape probability of a rabbit.
      */
-    public double getEscapeProbability(boolean isNight)
+    public static double getEscapeProbability(boolean isNight)
     {
         return isNight ? escapeProbability + ESCAPE_PROBABILITY_CHANGE : escapeProbability;
     }

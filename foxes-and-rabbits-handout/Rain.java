@@ -9,7 +9,7 @@ public class Rain extends Weather
 {
     // instance variables - replace the example below with your own
     private static final int DURATION = 10;// number of steps
-    private int age;
+    private int age; 
     
     // call these constancs ...CHANGE
     private static final double EAGLE_HUNTING_PROBABILITY = -0.05;
@@ -19,9 +19,9 @@ public class Rain extends Weather
     /**
      * Constructor for objects of class Rain
      */
-    public Rain()
+    public Rain(boolean isNight)
     {
-        super();
+        super(isNight);
         age = 0;
         setProbabilities(false);
     }
@@ -29,9 +29,9 @@ public class Rain extends Weather
     public void setProbabilities(boolean reset){
         // need to assert these are greater than zero !!
         if (reset) {
-                Eagle.setHuntingProbability(Eagle.getHuntingProbability() - EAGLE_HUNTING_PROBABILITY);
-                Anthrax.setInfectionProbability(Anthrax.getInfectionProbability() - ANTHRAX_INFECTION_PROBABILITY);
-                Sloth.setEscapeProbability(Sloth.getEscapeProbability() - SLOTH_ESCAPE_PROBABILITY);
+            Eagle.setHuntingProbability(Eagle.getHuntingProbability() - EAGLE_HUNTING_PROBABILITY);
+            Anthrax.setInfectionProbability(Anthrax.getInfectionProbability() - ANTHRAX_INFECTION_PROBABILITY);
+            Sloth.setEscapeProbability(Sloth.getEscapeProbability() - SLOTH_ESCAPE_PROBABILITY);
         } else {
             Eagle.setHuntingProbability(Eagle.getHuntingProbability() + EAGLE_HUNTING_PROBABILITY);
             Anthrax.setInfectionProbability(Anthrax.getInfectionProbability() + ANTHRAX_INFECTION_PROBABILITY);

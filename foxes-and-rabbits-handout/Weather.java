@@ -9,9 +9,10 @@ public abstract class Weather
 {
     // instance variables - replace the example below with your own
     private boolean occuring;
-    
-    public Weather(){
+    protected boolean isNight;
+    public Weather(boolean isNight){
         occuring = true;
+        isNight = isNight;
     }
     
     public abstract void updateWeather();

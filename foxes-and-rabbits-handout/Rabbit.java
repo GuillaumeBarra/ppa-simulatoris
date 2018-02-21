@@ -111,9 +111,6 @@ public class Rabbit extends Animal
         }
     }
     
-    public static double getEscapeProbability(){
-        return escapeProbability;
-    }
     public static void setEscapeProbability(double newEscapeProbability){
         escapeProbability = newEscapeProbability;
         assert escapeProbability >= 0; // either remove or add error message
@@ -200,7 +197,7 @@ public class Rabbit extends Animal
      * Get the escape probability of a rabbit.
      * @return the escape probability of a rabbit.
      */
-    public double getEscapeProbability(boolean isNight)
+    public static double getEscapeProbability(boolean isNight)
     {
         return isNight ? escapeProbability + ESCAPE_PROBABILITY_CHANGE : escapeProbability;
     }
