@@ -36,7 +36,7 @@ public class Eagle extends Animal
     private  boolean isAsleep = false;
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.2;
-    
+
     private static final double EAGLE_CREATION_PROBABILITY = 0.08;
 
     // Individual characteristics (instance fields).
@@ -92,7 +92,6 @@ public class Eagle extends Animal
                     if (isAsleep) {
                         return;
                     }
-                    huntingProbability += HUNTING_PROBABILITY_CHANGE;
                 }
                 procreate(newEagles); 
                 // Move towards a source of food if found.
@@ -112,7 +111,7 @@ public class Eagle extends Animal
             }
         }
     }
-    
+
     private static double getCreationProbability(){
         return EAGLE_CREATION_PROBABILITY;
     }
@@ -138,14 +137,12 @@ public class Eagle extends Animal
             setDead();
         }
     }
-    
+
     public static double getHuntingProbability(){
         return huntingProbability;
     }
-    
+
     public static void setHuntingProbability(double newHuntingProbability){
-        System.out.println("        new hunting probs::");
-        System.out.println(newHuntingProbability);
         assert newHuntingProbability >= 0 : "Eagle hunting probability below zero!!" + newHuntingProbability;
         huntingProbability = newHuntingProbability;
     }
@@ -157,6 +154,12 @@ public class Eagle extends Animal
      */
     private Location findFood(boolean isNight)
     {
+        double tempHuntingProbability;
+        if (isNight){
+            tempHuntingProbability = huntingProbability + HUNTING_PROBABILITY_CHANGE;
+        } else {
+            tempHuntingProbability = huntingProbability;
+        }
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
@@ -166,7 +169,7 @@ public class Eagle extends Animal
             if(animal instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) animal;
                 if(rabbit.isAlive()) { 
-                    if (rand.nextDouble() <= huntingProbability) {
+                    if (rand.nextDouble() <= tempHuntingProbability) {
                         if (rand.nextDouble() <= rabbit.getEscapeProbability(isNight)) { // NOTE: review this.
                             rabbit.setDead();
                             foodLevel = RABBIT_FOOD_VALUE;
@@ -177,7 +180,7 @@ public class Eagle extends Animal
             } else if(animal instanceof Iguana) {
                 Iguana iguana = (Iguana) animal;
                 if(iguana.isAlive()) { 
-                    if (rand.nextDouble() <= huntingProbability) {
+                    if (rand.nextDouble() <= tempHuntingProbability) {
                         if (rand.nextDouble() <= iguana.getEscapeProbability(isNight)) { // NOTE: review this.
                             iguana.setDead();
                             foodLevel = IGUANA_FOOD_VALUE;

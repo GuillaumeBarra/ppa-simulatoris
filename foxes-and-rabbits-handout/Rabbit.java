@@ -81,8 +81,6 @@ public class Rabbit extends Animal
                 if(isNight){
                     isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
                     if (isAsleep) {return;}
-
-                    escapeProbability += ESCAPE_PROBABILITY_CHANGE; 
                 }
                 procreate(newRabbits);
                 Location newLocation = findFood(isNight);
@@ -111,6 +109,14 @@ public class Rabbit extends Animal
         if(foodLevel <= 0) {
             setDead();
         }
+    }
+    
+    public static double getEscapeProbability(){
+        return escapeProbability;
+    }
+    public static void setEscapeProbability(double newEscapeProbability){
+        escapeProbability = newEscapeProbability;
+        assert escapeProbability >= 0; // either remove or add error message
     }
 
     /**

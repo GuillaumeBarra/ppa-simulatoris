@@ -154,12 +154,14 @@ public class Simulator
     private void updateWeather(){
         createWeather();
         
+        List<Weather> weatherToRemove = new ArrayList<Weather>();
         for (Weather weatherInstance : occuringWeather){
             weatherInstance.updateWeather();
             if (! weatherInstance.isOccuring()){ // the code pattern here, wher exclamaton mark happens in brackets, should be used throughout project.
-                occuringWeather.remove(weatherInstance);
+                weatherToRemove.add(weatherInstance);
             }
         }
+        occuringWeather.removeAll(weatherToRemove);
     }
 
     /**

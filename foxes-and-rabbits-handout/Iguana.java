@@ -81,8 +81,6 @@ public class Iguana extends Animal
                 if(isNight){
                     isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
                     if (isAsleep) {return;}
-
-                    escapeProbability += ESCAPE_PROBABILITY_CHANGE; 
                 }
                 procreate(newIguanas);
                 Location newLocation = findFood(isNight);

@@ -80,8 +80,6 @@ public class Sloth extends Animal
                 if(isNight){
                     isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
                     if (isAsleep) {return;}
-
-                    escapeProbability += ESCAPE_PROBABILITY_CHANGE; 
                 }
                 procreate(newSloths);
                 Location newLocation = findFood(isNight);

@@ -69,11 +69,12 @@ public class Fox extends Animal
         }
     }
     
-    public double getHuntingProbability(){
+    public static double getHuntingProbability(){
         return huntingProbability;
     }
-    
-    public void setHuntingProbability(double newHuntingProbability){
+
+    public static void setHuntingProbability(double newHuntingProbability){
+        assert newHuntingProbability >= 0 : "Eagle hunting probability below zero!!" + newHuntingProbability;
         huntingProbability = newHuntingProbability;
     }
 
@@ -101,7 +102,6 @@ public class Fox extends Animal
                     if (isAsleep) {
                         return;
                     }
-                    huntingProbability += HUNTING_PROBABILITY_CHANGE;
                 }
                 procreate(newFoxes); 
                 // Move towards a source of food if found.
@@ -155,6 +155,12 @@ public class Fox extends Animal
      */
     private Location findFood(boolean isNight)
     {
+        double tempHuntingProbability;
+        if (isNight){
+            tempHuntingProbability = huntingProbability + HUNTING_PROBABILITY_CHANGE;
+        } else {
+            tempHuntingProbability = huntingProbability;
+        }
         Field field = getField();
         List<Location> adjacent = field.adjacentLocations(getLocation());
         Iterator<Location> it = adjacent.iterator();
@@ -164,7 +170,7 @@ public class Fox extends Animal
             if(animal instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) animal;
                 if(rabbit.isAlive()) { 
-                    if (rand.nextDouble() <= huntingProbability) {
+                    if (rand.nextDouble() <= tempHuntingProbability) {
                         if (rand.nextDouble() <= rabbit.getEscapeProbability(isNight)) { // NOTE: review this.
                             rabbit.setDead();
                             foodLevel = RABBIT_FOOD_VALUE;
@@ -175,7 +181,7 @@ public class Fox extends Animal
             } else if (animal instanceof Sloth){
                 Sloth sloth = (Sloth) animal;
                 if(sloth.isAlive()) { 
-                    if (rand.nextDouble() <= huntingProbability) {
+                    if (rand.nextDouble() <= tempHuntingProbability) {
                         if (rand.nextDouble() <= sloth.getEscapeProbability(isNight)) { // NOTE: review this.
                             sloth.setDead();
                             foodLevel = SLOTH_FOOD_VALUE;

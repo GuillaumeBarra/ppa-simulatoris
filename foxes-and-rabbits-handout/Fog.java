@@ -1,25 +1,25 @@
 
 /**
- * Write a description of class Rain here.
+ * Write a description of class Fog here.
  *
  * @author (your name)
  * @version (a version number or a date)
  */
-public class Rain extends Weather
+public class Fog extends Weather
 {
     // instance variables - replace the example below with your own
-    private static final int DURATION = 10;// number of steps
+    private static final int DURATION = 25;// number of steps
     private int age;
     
     // call these constancs ...CHANGE
     private static final double EAGLE_HUNTING_PROBABILITY = -0.05;
-    private static final double ANTHRAX_INFECTION_PROBABILITY = 0.4;
-    private static final double SLOTH_ESCAPE_PROBABILITY = -0.1;
+    private static final double FOX_HUNTING_PROBABILITY = 0.2;
+    private static final double RABBIT_ESCAPE_PROBABILITY = 0.3;
     
     /**
      * Constructor for objects of class Rain
      */
-    public Rain()
+    public Fog()
     {
         super();
         age = 0;
@@ -30,12 +30,12 @@ public class Rain extends Weather
         // need to assert these are greater than zero !!
         if (reset) {
                 Eagle.setHuntingProbability(Eagle.getHuntingProbability() - EAGLE_HUNTING_PROBABILITY);
-                Anthrax.setInfectionProbability(Anthrax.getInfectionProbability() - ANTHRAX_INFECTION_PROBABILITY);
-                Sloth.setEscapeProbability(Sloth.getEscapeProbability() - SLOTH_ESCAPE_PROBABILITY);
+                Fox.setHuntingProbability(Fox.getHuntingProbability() - FOX_HUNTING_PROBABILITY);
+                Rabbit.setEscapeProbability(Rabbit.getEscapeProbability() - RABBIT_ESCAPE_PROBABILITY);
         } else {
             Eagle.setHuntingProbability(Eagle.getHuntingProbability() + EAGLE_HUNTING_PROBABILITY);
-            Anthrax.setInfectionProbability(Anthrax.getInfectionProbability() + ANTHRAX_INFECTION_PROBABILITY);
-            Sloth.setEscapeProbability(Sloth.getEscapeProbability() + SLOTH_ESCAPE_PROBABILITY);
+            Fox.setHuntingProbability(Fox.getHuntingProbability() + FOX_HUNTING_PROBABILITY);
+            Rabbit.setEscapeProbability(Rabbit.getEscapeProbability() + RABBIT_ESCAPE_PROBABILITY);
         }
     }
     

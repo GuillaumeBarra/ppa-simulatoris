@@ -36,15 +36,8 @@ public class Anthrax extends Organism
         organismsInfected = new ArrayList<Organism>();
         //(numberOfAnthraxInstances += 1;
         organismsInfected.add(this);
-        System.out.println(organismsInfected.size());
         procreate(organismsInfected);
-        System.out.println(organismsInfected.size());
         organismsInfected.remove(this);
-        System.out.println(organismsInfected.size());
-        for (Organism x : organismsInfected){
-            System.out.println(x);
-        }
-
     }
 
     public void act(List<Organism> newAnthrax, boolean isNight){
@@ -54,24 +47,18 @@ public class Anthrax extends Organism
         // System.out.println(organismsInfected.size());
         // System.out.println(numberOfAnthraxInstances);
         if (organismsInfected.size() == 0){
-            System.out.println("        Set dead anthrax");
-            System.out.println(this);
             setDead();
         }
 
         ArrayList<Organism> organismsToRemove = new ArrayList<Organism>();
         for (Organism infected : organismsInfected){
                 if (rand.nextDouble() <= DEAD_PROBABILITY && !(infected instanceof Anthrax)){ // the second bolean condition should not need to exist if the logic in the constructor works.
-                    System.out.println("        infected dead");
-                    System.out.println(infected);
                     infected.setDead();
                     organismsToRemove.add(infected);
             }
         }
         organismsInfected.removeAll(organismsToRemove);
         procreate(newAnthrax);
-        System.out.println("        infected size:");
-        System.out.println(organismsInfected.size());
     }
 
     public void procreate(List<Organism> newAnthrax){
