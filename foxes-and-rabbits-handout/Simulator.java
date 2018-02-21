@@ -39,8 +39,14 @@ public class Simulator
     
     private static final double ANTHRAX_CREATION_PROBABILITY = 0.005;
     
+    private static final double RAIN_PROBABILITY = 0.2;
+    private static final double FOG_PROBABILITY = 0.1;
+    private static boolean isRaining = false;
+    private static boolean isFoggy = false;
     // List of animals in the field.
     private List<Organism> organisms;
+    
+    private List<Weather> occuringWeather;
     // List of organism classes.
     private List<String> organismClasses;
     // The current state of the field.
@@ -77,6 +83,7 @@ public class Simulator
         }
 
         organisms = new ArrayList<>();
+        occuringWeather = new ArrayList<>();
         field = new Field(depth, width);
 
         time = new Time(sunRise, sunSet);
@@ -125,6 +132,7 @@ public class Simulator
         step++;
         time.incrementTime(TIME_PER_STEP);
         boolean isNight = time.isNight();
+        updateWeather();
         
         // Provide space for newborn animals.
         List<Organism> newOrganisms = new ArrayList<>();        
@@ -142,6 +150,17 @@ public class Simulator
 
         view.showStatus(step, field);
     }
+    
+    private void updateWeather(){
+        createWeather();
+        
+        for (Weather weatherInstance : occuringWeather){
+            weatherInstance.updateWeather();
+            if (! weatherInstance.isOccuring()){ // the code pattern here, wher exclamaton mark happens in brackets, should be used throughout project.
+                occuringWeather.remove(weatherInstance);
+            }
+        }
+    }
 
     /**
      * Reset the simulation to a starting position.
@@ -151,10 +170,25 @@ public class Simulator
         step = 0;
         organisms.clear();
         populate();
+        createWeather();
         time.setTime(500);
 
         // Show the starting state in the view.
         view.showStatus(step, field);
+    }
+    
+    private void createWeather(){
+        Random rand = Randomizer.getRandom(); // This is being used in mulitple methods. Declare it for the whole class.
+        if (rand.nextDouble() <= RAIN_PROBABILITY && !isRaining){
+            Rain rain = new Rain();
+            isRaining = true;
+            occuringWeather.add(rain);
+        }
+        // } else if(rand.nextDouble() <= FOG_PROBABILITY && !isFoggy){
+            // Fog fog = new fog();
+            // isFoggy = true;
+            // occuringWeather.add(fog);
+        // }
     }
 
     /**

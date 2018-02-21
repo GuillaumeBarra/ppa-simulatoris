@@ -100,6 +100,14 @@ public class Sloth extends Animal
             }
         }
     }
+    
+    public static double getEscapeProbability(){
+        return escapeProbability;
+    }
+    public static void setEscapeProbability(double newEscapeProbability){
+        escapeProbability = newEscapeProbability;
+        assert escapeProbability >= 0; // either remove or add error message
+    }
 
     /**
      * Make this fox more hungry. This could result in the fox's death.

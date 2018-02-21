@@ -68,6 +68,14 @@ public class Fox extends Animal
             foodLevel = RABBIT_FOOD_VALUE + SLOTH_FOOD_VALUE; // could be an issue
         }
     }
+    
+    public double getHuntingProbability(){
+        return huntingProbability;
+    }
+    
+    public void setHuntingProbability(double newHuntingProbability){
+        huntingProbability = newHuntingProbability;
+    }
 
     /**
      * This is what the fox does most of the time: it hunts for

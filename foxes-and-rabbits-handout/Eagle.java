@@ -138,6 +138,17 @@ public class Eagle extends Animal
             setDead();
         }
     }
+    
+    public static double getHuntingProbability(){
+        return huntingProbability;
+    }
+    
+    public static void setHuntingProbability(double newHuntingProbability){
+        System.out.println("        new hunting probs::");
+        System.out.println(newHuntingProbability);
+        assert newHuntingProbability >= 0 : "Eagle hunting probability below zero!!" + newHuntingProbability;
+        huntingProbability = newHuntingProbability;
+    }
 
     /**
      * Look for rabbits adjacent to the current location.
