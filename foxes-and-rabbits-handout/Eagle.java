@@ -3,10 +3,11 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * Write a description of class Eagle here.
+ * A simple model of an eagle.
+ * Eagles sleep, age, move, eat preys, and die.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Eagle extends Animal
 {
@@ -29,15 +30,12 @@ public class Eagle extends Animal
     // The food value of a single rabbit. In effect, this is the
     // number of steps an eagle can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 9;
+    // The food value of a single iguana.
     private static final int IGUANA_FOOD_VALUE = 12;
     // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
-    // Wether or not an eagle is asleep.
-    private  boolean isAsleep = false;
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.5;
-
-    private static final double EAGLE_CREATION_PROBABILITY = 0.08;
 
     // Individual characteristics (instance fields).
     // an eagle's age.
@@ -46,6 +44,8 @@ public class Eagle extends Animal
     private int ageLastBred;
     // An eagle's food level, which is increased by eating rabbits.
     private int foodLevel;
+    // Wether or not an eagle is asleep.
+    private  boolean isAsleep = false;
 
     /**
      * Create an eagle. An eagle can be created as a new born (age zero
@@ -70,24 +70,28 @@ public class Eagle extends Animal
 
     /**
      * This is what the eagle does most of the time: it hunts for
-     * rabbits. In the process, it might procreate, die of hunger,
+     * rabbits and iguanas. In the process, it might sleep, procreate, die of hunger,
      * or die of old age.
-     * @param field The field currently occupied.
+     * 
      * @param newEagles A list to return newly born eagles.
+     * @param isNight Whether it is night time.
      */
     public void act(List<Organism> newEagles, boolean isNight)
     {
         incrementAge();
         incrementHunger();
-        if(isAlive()) {
+        if(isAlive()){
             if (!isNight) {
+                // Animals don't sleep during daytime.
                 isAsleep = false;
             }
             if (isAsleep) {
+                // If the animal is already aleep, do nothing.
                 return;
             }
             else {
                 if(isNight){
+                    // Run a probability check to determine whether the animal sleeps.
                     isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
                     if (isAsleep) {
                         return;
@@ -112,10 +116,6 @@ public class Eagle extends Animal
         }
     }
 
-    private static double getCreationProbability(){
-        return EAGLE_CREATION_PROBABILITY;
-    }
-
     /**
      * Increase the age. This could result in the eagle's death.
      */
@@ -138,18 +138,30 @@ public class Eagle extends Animal
         }
     }
 
+    /**
+     * Get the hungting probability.
+     * 
+     * @return hungtingProbability.
+     */
     public static double getHuntingProbability(){
         return huntingProbability;
     }
 
+    /**
+     * Change the hungting probability.
+     * 
+     * @param newHuntingProbability The new hungting probability.
+     */
     public static void setHuntingProbability(double newHuntingProbability){
         assert newHuntingProbability >= 0 : "Eagle hunting probability below zero!!" + newHuntingProbability;
         huntingProbability = newHuntingProbability;
     }
 
     /**
-     * Look for rabbits adjacent to the current location.
-     * Only the first live rabbit is eaten.
+     * Look for rabbits and iguanas adjacent to the current location.
+     * Only the first live prey is eaten.
+     * 
+     * @param isNight Whether it is night time.
      * @return Where food was found, or null if it wasn't.
      */
     private Location findFood(boolean isNight)
@@ -170,7 +182,7 @@ public class Eagle extends Animal
                 Rabbit rabbit = (Rabbit) animal;
                 if(rabbit.isAlive()) { 
                     if (rand.nextDouble() <= tempHuntingProbability) {
-                        if (rand.nextDouble() <= rabbit.getEscapeProbability(isNight)) { // NOTE: review this.
+                        if (rand.nextDouble() <= rabbit.getEscapeProbability(isNight)) {
                             rabbit.setDead();
                             foodLevel = RABBIT_FOOD_VALUE;
                             return where;
@@ -181,7 +193,7 @@ public class Eagle extends Animal
                 Iguana iguana = (Iguana) animal;
                 if(iguana.isAlive()) { 
                     if (rand.nextDouble() <= tempHuntingProbability) {
-                        if (rand.nextDouble() <= iguana.getEscapeProbability(isNight)) { // NOTE: review this.
+                        if (rand.nextDouble() <= iguana.getEscapeProbability(isNight)) {
                             iguana.setDead();
                             foodLevel = IGUANA_FOOD_VALUE;
                             return where;
@@ -196,6 +208,7 @@ public class Eagle extends Animal
     /**
      * Check whether or not this eagle is to give birth at this step.
      * New births will be made into free adjacent locations.
+     * 
      * @param newEagles A list to return newly born eagles.
      */
     public void procreate(List<Organism> newEagles)
@@ -226,23 +239,10 @@ public class Eagle extends Animal
         }
     }
 
-    // revie this   method 1!!!!!
-    /**
-     * Generate a number representing the number of births,
-     * if it can procreate.
-     * @return The number of births (may be zero).
-     */
-    private int procreate()
-    {
-        int births = 0;
-        if(canProcreate() && rand.nextDouble() <= PROCREATING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
-        }
-        return births;
-    }
-
     /**
      * An eagle can procreate if it has reached the procreateing age.
+     * 
+     * @return true if the fox can procreate, false otherwise.
      */
     private boolean canProcreate()
     {

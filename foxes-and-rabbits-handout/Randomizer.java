@@ -5,8 +5,8 @@ import java.util.Random;
  * randomizer, repeated runs will perform exactly the same (which helps with testing). Set 
  * 'useShared' to false to get different random behaviour every time.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Randomizer
 {

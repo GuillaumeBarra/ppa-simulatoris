@@ -1,23 +1,29 @@
 
 /**
- * Write a description of class Fog here.
+ * Make it foggy.
+ * Changes the behaviour of some animals.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Fog extends Weather
 {
-    // instance variables - replace the example below with your own
+    // How long the fog will go on for.
     private static final int DURATION = 25;// number of steps
+    // How long the fog has been going on.
     private int age;
     
-    // call these constancs ...CHANGE
+    // The change of eagle's hunting probability.
     private static final double EAGLE_HUNTING_PROBABILITY = -0.05;
+    // The change of fox's hunting probability.
     private static final double FOX_HUNTING_PROBABILITY = 0.2;
+    // The change of rabbit's escape probability.
     private static final double RABBIT_ESCAPE_PROBABILITY = 0.3;
     
     /**
-     * Constructor for objects of class Fog
+     * Make it foggy and change the behaviour of some animals.
+     * 
+     * @param isNight Whether it is night time.
      */
     public Fog(boolean isNight)
     {
@@ -26,6 +32,11 @@ public class Fog extends Weather
         setProbabilities(false);
     }
     
+    /**
+     * Change the behaviour of the animals.
+     * 
+     * @param reset Whether we reset the behaviour of the animals
+     */
     public void setProbabilities(boolean reset){
         // need to assert these are greater than zero !!
         if (reset) {
@@ -39,6 +50,9 @@ public class Fog extends Weather
         }
     }
     
+    /**
+     * Check if the weather keep going or does it stop.
+     */
     public void updateWeather(){
         age += 1;
         if (age >= DURATION) {

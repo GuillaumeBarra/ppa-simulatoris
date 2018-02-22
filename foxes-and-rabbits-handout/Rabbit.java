@@ -4,10 +4,10 @@ import java.util.Random;
 
 /**
  * A simple model of a rabbit.
- * Rabbits age, move, procreate, and die.
+ * Rabbits sleep, eat, age, move, procreate, and die.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29 (2)
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Rabbit extends Animal
 {
@@ -27,11 +27,11 @@ public class Rabbit extends Animal
     private static final int PROCREATING_INTERVAL = 2;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 10;
-    // The huniting 
+    // The food value of a single grass. In effect, this is the
+    // number of steps a rabbit can go before it has to eat again. 
     private static final int GRASS_FOOD_VALUE = 5;
     // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
-    // Wether or not the rabbit is asleep.
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.5;
 
@@ -41,8 +41,9 @@ public class Rabbit extends Animal
     private int age;
     // The age of the rabbit when it last bred.
     private int ageLastBred;
+    // The rabbit's food level, which is increased by eating grass.
     private int foodLevel;
-    
+    // Whether the rabbit is asleep.
     private boolean isAsleep;
 
     /**
@@ -71,7 +72,7 @@ public class Rabbit extends Animal
 
     /**
      * This is what the rabbit does most of the time - it runs 
-     * around. Sometimes it will procreate or die of old age.
+     * around and finds food. Sometimes it will procreate or die of old age.
      * @param newRabbits A list to return newly born rabbits.
      */
     public void act(List<Organism> newRabbits, boolean isNight)
@@ -79,11 +80,23 @@ public class Rabbit extends Animal
         incrementAge();
         incrementHunger();
         if(isAlive()) {
-            if (isAsleep) {return;}
-            else {
-                if(isNight){
-                    isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
-                    if (isAsleep) {return;}
+            if(isAlive()){
+                if (!isNight) {
+                    // Animals don't sleep during daytime.
+                    isAsleep = false;
+                }
+                if (isAsleep) {
+                    // If the animal is already aleep, do nothing.
+                    return;
+                }
+                else {
+                    if(isNight){
+                        // Run a probability check to determine whether the animal sleeps.
+                        isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
+                        if (isAsleep) {
+                            return;
+                        }
+                    }
                 }
                 procreate(newRabbits);
                 Location newLocation = findFood(isNight);
@@ -104,7 +117,7 @@ public class Rabbit extends Animal
     }
 
     /**
-     * Make this fox more hungry. This could result in the fox's death.
+     * Make this rabbit more hungry. This could result in the rabbit's death.
      */
     private void incrementHunger()
     {
@@ -113,19 +126,25 @@ public class Rabbit extends Animal
         } else {
             foodLevel--;
         }
+        
         if(foodLevel <= 0) {
             setDead();
         }
     }
     
+    /**
+     * change the escape probability.
+     * 
+     * @param newEscapeProbability the new escape probability.
+     */
     public static void setEscapeProbability(double newEscapeProbability){
         escapeProbability = newEscapeProbability;
-        assert escapeProbability >= 0; // either remove or add error message
     }
 
     /**
      * Look for rabbits adjacent to the current location.
      * Only the first live rabbit is eaten.
+     * 
      * @return Where food was found, or null if it wasn't.
      */
     private Location findFood(boolean isNight)
@@ -163,6 +182,7 @@ public class Rabbit extends Animal
     /**
      * Check whether or not this rabbit is to give birth at this step.
      * New births will be made into free adjacent locations.
+     * 
      * @param newRabbits A list to return newly born rabbits.
      */
     public void procreate(List<Organism> newRabbits)
@@ -193,6 +213,7 @@ public class Rabbit extends Animal
 
     /**
      * A rabbit can procreate if it has reached the procreateing age.
+     * 
      * @return true if the rabbit can procreate, false otherwise.
      */
     private boolean canProcreate()
@@ -202,6 +223,7 @@ public class Rabbit extends Animal
 
     /**
      * Get the escape probability of a rabbit.
+     * 
      * @return the escape probability of a rabbit.
      */
     public static double getEscapeProbability(boolean isNight)

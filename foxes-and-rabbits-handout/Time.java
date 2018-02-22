@@ -3,8 +3,8 @@
  * Does not account for the date. Only the time of the day.
  * Time is handled in minutes.
  *
- * @author Sebastian Tranaeus and Peter Xu
- * @version 1.0
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Time
 {
@@ -16,7 +16,10 @@ public class Time
     private int sunSet;
 
     /**
-     * Constructor for objects of class Time
+     * Create an instance of time
+     * 
+     * @param sunRise The time in minutes for the sunrise.
+     * @param sunSet The time in minutes for the sunset.
      */
     public Time(int sunRise, int sunSet)
     {

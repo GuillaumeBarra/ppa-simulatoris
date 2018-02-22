@@ -3,15 +3,15 @@ import java.util.List;
 import java.util.Iterator;
 
 /**
- * Write a description of class Grass here.
+ * A simple model of a grass.
+ * Grass just procreates.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Grass extends Plant
 {
     private static final int MAX_AGE = 20;
-    //private static final int FOOD_VALUE = 4;
     private static final double PROCREATING_PROBABILITY = 0.5;
     private static final double PROCREATING_AGE = 5;
     private static final int MAX_LITTER_SIZE = 2; //NOTE better name
@@ -19,7 +19,11 @@ public class Grass extends Plant
     private int age;
 
     /**
-     * Constructor for objects of class Grass
+     * Create instancs of grass
+     * 
+     * @param randomAge If true, the fox will have random age and hunger level.
+     * @param field The field currently occupied.
+     * @param location The location within the field.
      */
     public Grass(boolean randomAge, Field field, Location location)
     {
@@ -32,6 +36,12 @@ public class Grass extends Plant
         }
     }
 
+    /**
+     * Check whether or not this grass is to procreate at this step.
+     * New births will be made into free adjacent locations.
+     * 
+     * @param newGrasses A list to return newly created grass.
+     */
     public void procreate(List<Organism> newGrasses)
     {
         if (isAlive()){
@@ -51,7 +61,7 @@ public class Grass extends Plant
     }
 
     /**
-     * Increase the age. This could result in the fox's death.
+     * Increase the age. This could result in the grass's death.
      */
     private void incrementAge()
     {
@@ -61,6 +71,12 @@ public class Grass extends Plant
         }
     }
 
+    /**
+     * Let the grass increase in age and create new grasses.
+     * 
+     * @param newGrasses A list to return newly created grass.
+     * @param isNight Whether it is night time.
+     */
     public void act(List<Organism> newGrasses, boolean isNight){
         incrementAge();
         procreate(newGrasses);

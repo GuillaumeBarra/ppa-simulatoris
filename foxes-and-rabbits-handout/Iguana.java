@@ -3,51 +3,55 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * Write a description of class Iguana here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * A simple model of a iguana.
+ * Iguanas sleep, eat, age, move, procreate, and die.
+ * 
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Iguana extends Animal
 {
-    // Characteristics shared by all rabbits (class variables).
+    // Characteristics shared by all iguanas (class variables).
 
-    // The probability of a rabbit escaping from a predator.
+    // The probability of a iguana escaping from a predator.
     private static double escapeProbability = 0.3;
-    // The probability change of a rabbit escaping from a predator.
+    // The probability change of a iguana escaping from a predator.
     private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
-    // The age at which a rabbit can start to procreate.
+    // The age at which a iguana can start to procreate.
     private static final int PROCREATING_AGE = 10;
-    // The age to which a rabbit can live.
+    // The age to which a iguana can live.
     private static final int MAX_AGE = 25;
-    // The likelihood of a rabbit procreateing when it meets another rabbit.
+    // The likelihood of a iguana procreateing when it meets another iguana.
     private static final double PROCREATING_PROBABILITY = 0.22;
-    // The number of years before a rabbit can procreate again.
+    // The number of years before a iguana can procreate again.
     private static final int PROCREATING_INTERVAL = 8;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
-    // The huniting 
+    // The food value of a single grass. In effect, this is the
+    // number of steps a iguana can go before it has to eat again. 
     private static final int GRASS_FOOD_VALUE = 4;
     // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
-    // Wether or not the rabbit is asleep.
+    // Wether or not the iguana is asleep.
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.5;
 
     // Individual characteristics (instance fields).
 
-    // The rabbit's age.
+    // The iguana's age.
     private int age;
-    // The age of the rabbit when it last bred.
+    // The age of the iguana when it last bred.
     private int ageLastBred;
+    // The sloth's food level, which is increased by eating grass.
     private int foodLevel;
+    // Whether the sloth is asleep.
     private boolean isAsleep;
 
     /**
-     * Create a new rabbit. A rabbit may be created with age
+     * Create a new iguana. A iguana may be created with age
      * zero (a new born) or with a random age.
      * 
-     * @param randomAge If true, the rabbit will have a random age.
+     * @param randomAge If true, the iguana will have a random age.
      * @param field The field currently occupied.
      * @param location The location within the field.
      */
@@ -66,22 +70,35 @@ public class Iguana extends Animal
             isAsleep = false;
         }
     }
-    
+
     /**
-     * This is what the rabbit does most of the time - it runs 
-     * around. Sometimes it will procreate or die of old age.
-     * @param newRabbits A list to return newly born rabbits.
+     * This is what the iguana does most of the time - it runs 
+     * around and find food. Sometimes it will procreate or die of old age.
+     * 
+     * @param newIguanas A list to return newly born iguanas.
      */
     public void act(List<Organism> newIguanas, boolean isNight)
     {
         incrementAge();
         incrementHunger();
         if(isAlive()) {
-            if (isAsleep) {return;}
-            else {
-                if(isNight){
-                    isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
-                    if (isAsleep) {return;}
+            if(isAlive()){
+                if (!isNight) {
+                    // Animals don't sleep during daytime.
+                    isAsleep = false;
+                }
+                if (isAsleep) {
+                    // If the animal is already aleep, do nothing.
+                    return;
+                }
+                else {
+                    if(isNight){
+                        // Run a probability check to determine whether the animal sleeps.
+                        isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
+                        if (isAsleep) {
+                            return;
+                        }
+                    }
                 }
                 procreate(newIguanas);
                 Location newLocation = findFood(isNight);
@@ -102,7 +119,7 @@ public class Iguana extends Animal
     }
 
     /**
-     * Make this fox more hungry. This could result in the fox's death.
+     * Make this iguana more hungry. This could result in the iguana's death.
      */
     private void incrementHunger()
     {
@@ -111,14 +128,16 @@ public class Iguana extends Animal
         } else {
             foodLevel--;
         }
+
         if(foodLevel <= 0) {
             setDead();
         }
     }
 
     /**
-     * Look for rabbits adjacent to the current location.
-     * Only the first live rabbit is eaten.
+     * Look for iguanas adjacent to the current location.
+     * Only the first live iguana is eaten.
+     * 
      * @return Where food was found, or null if it wasn't.
      */
     private Location findFood(boolean isNight)
@@ -143,7 +162,7 @@ public class Iguana extends Animal
 
     /**
      * Increase the age.
-     * This could result in the rabbit's death.
+     * This could result in the iguana's death.
      */
     private void incrementAge()
     {
@@ -154,9 +173,10 @@ public class Iguana extends Animal
     }
 
     /**
-     * Check whether or not this rabbit is to give birth at this step.
+     * Check whether or not this iguana is to give birth at this step.
      * New births will be made into free adjacent locations.
-     * @param newRabbits A list to return newly born rabbits.
+     * 
+     * @param newIguanas A list to return newly born iguanas.
      */
     public void procreate(List<Organism> newIguanas)
     {
@@ -185,8 +205,9 @@ public class Iguana extends Animal
     }
 
     /**
-     * A rabbit can procreate if it has reached the procreateing age.
-     * @return true if the rabbit can procreate, false otherwise.
+     * An iguana can procreate if it has reached the procreateing age.
+     * 
+     * @return true if the iguana can procreate, false otherwise.
      */
     private boolean canProcreate()
     {
@@ -194,8 +215,9 @@ public class Iguana extends Animal
     }
 
     /**
-     * Get the escape probability of a rabbit.
-     * @return the escape probability of a rabbit.
+     * Get the escape probability of an iguana.
+     * 
+     * @return the escape probability of a iguana.
      */
     public static double getEscapeProbability(boolean isNight)
     {

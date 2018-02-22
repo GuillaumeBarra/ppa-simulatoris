@@ -2,19 +2,18 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * A class representing shared characteristics of animals.
+ * A class representing shared characteristics of plants.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29 (2)
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public abstract class Plant extends Organism
 {
-        // TODO: Go through comments. replace animal with plant
     // The plant's age.
     private int age;
     
     /**
-     * Create a new animal at location in field.
+     * Create a new plant at location in field.
      * 
      * @param field The field currently occupied.
      * @param location The location within the field.

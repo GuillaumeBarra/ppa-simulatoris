@@ -1,24 +1,21 @@
 import java.util.List;
 import java.util.ArrayList;
 /**
- * Abstract class Organism - write a description of the class here
+ * Abstract class Organism - A class representing shared characteristics of all organisms.
  *
- * @author (your name here)
- * @version (version number or date here)
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public abstract class Organism
 {
     // Whether the animal is alive or not.
     private boolean alive;
+    // Whether the animal is infected or not.
+    private boolean infected;
     // The animal's field.
     private Field field;
     // The animal's position in the field.
     private Location location;
-    
-    private boolean infected;
-
-    // A list of organisms infected by anthrax.
-    //protected static ArrayList<Organism> organismsInfected;
     /**
      * Create a new animal at location in field.
      * 
@@ -31,22 +28,27 @@ public abstract class Organism
         this.field = field;
         setLocation(location);
         infected = false;
-      //  organismsInfected = new ArrayList<Organism>();
     }
 
     /**
-     * Make this animal act - that is: maL
-     * ke it do
+     * Make this animal act - that is: make it do
      * whatever it wants/needs to do.
-     * @param newAnimals A list to receive newly born animals.
+     * 
+     * @param newOrganisms A list to receive newly born animals.
      * @param isNight A boolean value that is true when night time, false if otherwise.
      */
     abstract public void act(List<Organism> newOrganisms, boolean isNight);
-
-    abstract public void procreate(List<Organism> newOrganism); 
+    
+    /**
+     * Make this animal procreate - that is: make it breed
+     * 
+     * @param newOrganisms A list to receive newly born animals.
+     */
+    abstract public void procreate(List<Organism> newOrganisms); 
 
     /**
      * Check whether the animal is alive or not.
+     * 
      * @return true if the animal is still alive.
      */
     protected boolean isAlive()
@@ -56,6 +58,7 @@ public abstract class Organism
 
     /**
      * Check whether the animal is alive or not.
+     * 
      * @return true if the animal is still alive.
      */
     protected boolean isInfected()
@@ -80,6 +83,7 @@ public abstract class Organism
 
     /**
      * Return the animal's location.
+     * 
      * @return The animal's location.
      */
     protected Location getLocation()
@@ -89,6 +93,7 @@ public abstract class Organism
 
     /**
      * Place the animal at the new location in the given field.
+     * 
      * @param newLocation The animal's new location.
      */
     protected void setLocation(Location newLocation)
@@ -102,6 +107,7 @@ public abstract class Organism
 
     /**
      * Return the animal's field.
+     * 
      * @return The animal's field.
      */
     protected Field getField()

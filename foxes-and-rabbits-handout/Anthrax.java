@@ -4,27 +4,27 @@ import java.util.List;
 import java.util.Iterator;
 
 /**
- * Write a description of class Anthrax here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * A simple model of a disease named anthrax.
+ * Anthrax tries to infect organisms and once they are infected,
+ * there is a chance of the organism dying.
+ * 
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Anthrax extends Organism
 {
     // A shared random number generator to control procreating.
     private static final Random rand = Randomizer.getRandom();
-
+    // The probability of an organism getting infected
     private static double infectionProbability = 0.5;
+    // The probability of an infected organism dying.
     private static final double DEAD_PROBABILITY = 0.3;
-
+    // An ArrayList of type organism used to store the organisms infected.
     protected static ArrayList<Organism> organismsInfected;
-    //private static int numberOfAnthraxInstances = 0;
     
     /**
-     * Create a fox. A fox can be created as a new born (age zero
-     * and not hungry) or with a random age and food level.
+     * Create an anthrax. 
      * 
-     * @param randomAge If true, the fox will have random age and hunger level.
      * @param field The field currently occupied.
      * @param location The location within the field.
      */
@@ -39,6 +39,11 @@ public class Anthrax extends Organism
         organismsInfected.remove(this);
     }
     
+    /**
+     * Get the number of organisms infected.
+     * 
+     * @return organismsInfected.size The number of organisms infected.
+     */
     public static int getOrganismsInfectedSize(){
         try {
             return organismsInfected.size();
@@ -47,28 +52,36 @@ public class Anthrax extends Organism
         }
         }
 
+    /**
+     * This is what the anthrax does - it checks if there's any infected organisms 
+     * and it tries to kill the infected organisms.
+     * 
+     * @param newAnthrax A list of type organism.
+     * @param isNight Whether it is night time.
+     */
     public void act(List<Organism> newAnthrax, boolean isNight){
-        // explain this
-        // int realSizeOfOrganismsInfected = organismsInfected.size() - numberOfAnthraxInstances;
-        // System.out.println(realSizeOfOrganismsInfected);
-        // System.out.println(organismsInfected.size());
-        // System.out.println(numberOfAnthraxInstances);
-        if (organismsInfected.size() == 0){
-            Simulator.setAnthraxCreated(false);
-            setDead();
-        }
-
-        ArrayList<Organism> organismsToRemove = new ArrayList<Organism>();
-        for (Organism infected : organismsInfected){
-                if (rand.nextDouble() <= DEAD_PROBABILITY && !(infected instanceof Anthrax)){ // the second bolean condition should not need to exist if the logic in the constructor works.
-                    infected.setDead();
-                    organismsToRemove.add(infected);
-            }
-        }
-        organismsInfected.removeAll(organismsToRemove);
-        procreate(newAnthrax);
+    if (organismsInfected.size() == 0){
+        Simulator.setAnthraxCreated(false);
+        setDead();
+        return;
     }
 
+    ArrayList<Organism> organismsToRemove = new ArrayList<Organism>();
+    for (Organism infected : organismsInfected){
+            if (rand.nextDouble() <= DEAD_PROBABILITY && !(infected instanceof Anthrax)){ // the second bolean condition should not need to exist if the logic in the constructor works.
+                infected.setDead();
+                organismsToRemove.add(infected);
+        }
+    }
+    organismsInfected.removeAll(organismsToRemove);
+    procreate(newAnthrax);
+    }
+
+    /**
+     * This let's the anthrax to infect more organisms
+     * 
+     * @param newAnthrax A list of type organism
+     */
     public void procreate(List<Organism> newAnthrax){
         ArrayList<Organism> organismsToRemove = new ArrayList<Organism>();
 
@@ -93,27 +106,30 @@ public class Anthrax extends Organism
                     if (!(organism.isInfected())){
                         if(rand.nextDouble() <= infectionProbability){
                             organismsToAdd.add(organism);
-                            // System.out.println("        infectedOrganism:");
                         }
                     }
                 }
             }
         }
         organismsInfected.addAll(organismsToAdd);
-        // if (organismsInfected.size() >= 10000000){
-            // Organism lastInfected = organismsInfected.get(organismsInfected.size() - 1);
-            // Location location = lastInfected.getLocation();
-            // Anthrax young = new Anthrax(field, location);
-            // newAnthrax.add(young);
-        // }
     }
     
+    /**
+     * return the infection probability.
+     * 
+     * @return Infection probability.
+     */
     public static double getInfectionProbability(){
         return infectionProbability;
     }
+    
+    /**
+     * Change the infection probability.
+     * 
+     * @param newInfectionProbability The new infection probability.
+     */
     public static void setInfectionProbability(double newInfectionProbability){
         infectionProbability = newInfectionProbability;
-        assert infectionProbability >= 0; // either remove or add error message
     }
 
 }

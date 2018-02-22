@@ -4,8 +4,8 @@ import java.util.Random;
 /**
  * A class representing shared characteristics of animals.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29 (2)
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public abstract class Animal extends Organism
 {
@@ -29,11 +29,11 @@ public abstract class Animal extends Organism
         } else {
             sex = "female";
         }
-        
     }
     
     /**
      * Return the animal's sex.
+     * 
      * @return the animal's sex.
      */
     protected String getSex()

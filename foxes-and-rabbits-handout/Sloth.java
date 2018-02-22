@@ -3,52 +3,53 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
- * Write a description of class Sloth here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * A simple model of a sloth.
+ * Sloths sleep, eat, age, move, procreate, and die.
+ * 
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Sloth extends Animal
 {
-    // Characteristics shared by all rabbits (class variables).
+    // Characteristics shared by all sloths (class variables).
 
-    // The probability of a rabbit escaping from a predator.
+    // The probability of a sloth escaping from a predator.
     private static double escapeProbability = 0.2;
-    // The probability change of a rabbit escaping from a predator.
+    // The probability change of a sloth escaping from a predator.
     private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
-    // The age at which a rabbit can start to procreate.
+    // The age at which a sloth can start to procreate.
     private static final int PROCREATING_AGE = 5;
-    // The age to which a rabbit can live.
+    // The age to which a sloth can live.
     private static final int MAX_AGE = 30;
-    // The likelihood of a rabbit procreateing when it meets another rabbit.
+    // The likelihood of a sloth procreateing when it meets another sloth.
     private static final double PROCREATING_PROBABILITY = 0.2;
-    // The number of years before a rabbit can procreate again.
+    // The number of years before a sloth can procreate again.
     private static final int PROCREATING_INTERVAL = 6;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
-    // The huniting 
+    // The food value of a single grass. In effect, this is the
+    // number of steps a sloth can go before it has to eat again. 
     private static final int GRASS_FOOD_VALUE = 5;
     // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
-    // Wether or not the rabbit is asleep.
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.5;
 
     // Individual characteristics (instance fields).
-
-    // The rabbit's age.
+    // The sloth's age.
     private int age;
-    // The age of the rabbit when it last bred.
+    // The age of the sloth when it last bred.
     private int ageLastBred;
+    // The sloth's food level, which is increased by eating grass.
     private int foodLevel;
-    
+    // Whether the sloth is asleep.
     private boolean isAsleep;
 
     /**
-     * Create a new rabbit. A rabbit may be created with age
+     * Create a new sloth. A sloth may be created with age
      * zero (a new born) or with a random age.
      * 
-     * @param randomAge If true, the rabbit will have a random age.
+     * @param randomAge If true, the sloth will have a random age.
      * @param field The field currently occupied.
      * @param location The location within the field.
      */
@@ -69,20 +70,33 @@ public class Sloth extends Animal
     }
     
     /**
-     * This is what the rabbit does most of the time - it runs 
-     * around. Sometimes it will procreate or die of old age.
-     * @param newRabbits A list to return newly born rabbits.
+     * This is what the sloth does most of the time - it runs 
+     * around and finds food. 
+     * Sometimes it will procreate or die of old age.
+     * 
+     * @param newSloths A list to return newly born sloths.
+     * @param isNight Whether it is night time.
      */
     public void act(List<Organism> newSloths, boolean isNight)
     {
         incrementAge();
         incrementHunger();
         if(isAlive()) {
-            if (isAsleep) {return;}
+            if (!isNight) {
+                // Animals don't sleep during daytime.
+                isAsleep = false;
+            }
+            if (isAsleep) {
+                // If the animal is already aleep, do nothing.
+                return;
+            }
             else {
                 if(isNight){
+                    // Run a probability check to determine whether the animal sleeps.
                     isAsleep = rand.nextDouble() <= SLEEP_PROBABILITY ? true : false;
-                    if (isAsleep) {return;}
+                    if (isAsleep) {
+                        return;
+                    }
                 }
                 procreate(newSloths);
                 Location newLocation = findFood(isNight);
@@ -102,16 +116,26 @@ public class Sloth extends Animal
         }
     }
     
+    /**
+     * return the escape probability.
+     * 
+     * @return escape probability.
+     */
     public static double getEscapeProbability(){
         return escapeProbability;
     }
+    
+    /**
+     * change the escape probability.
+     * 
+     * @param newEscapeProbability the new escape probability.
+     */
     public static void setEscapeProbability(double newEscapeProbability){
         escapeProbability = newEscapeProbability;
-        assert escapeProbability >= 0; // either remove or add error message
     }
 
     /**
-     * Make this fox more hungry. This could result in the fox's death.
+     * Make this sloth more hungry. This could result in the sloth's death.
      */
     private void incrementHunger()
     {
@@ -120,14 +144,15 @@ public class Sloth extends Animal
         } else {
             foodLevel--;
         }
+        
         if(foodLevel <= 0) {
             setDead();
         }
     }
 
     /**
-     * Look for rabbits adjacent to the current location.
-     * Only the first live rabbit is eaten.
+     * Look for sloths adjacent to the current location.
+     * Only the first live sloth is eaten.
      * @return Where food was found, or null if it wasn't.
      */
     private Location findFood(boolean isNight)
@@ -152,7 +177,7 @@ public class Sloth extends Animal
 
     /**
      * Increase the age.
-     * This could result in the rabbit's death.
+     * This could result in the sloth's death.
      */
     private void incrementAge()
     {
@@ -163,9 +188,9 @@ public class Sloth extends Animal
     }
 
     /**
-     * Check whether or not this rabbit is to give birth at this step.
+     * Check whether or not this sloth is to give birth at this step.
      * New births will be made into free adjacent locations.
-     * @param newRabbits A list to return newly born rabbits.
+     * @param newSloths A list to return newly born sloths.
      */
     public void procreate(List<Organism> newSloths)
     {
@@ -194,8 +219,9 @@ public class Sloth extends Animal
     }
 
     /**
-     * A rabbit can procreate if it has reached the procreateing age.
-     * @return true if the rabbit can procreate, false otherwise.
+     * A sloth can procreate if it has reached the procreateing age.
+     * 
+     * @return true if the sloth can procreate, false otherwise.
      */
     private boolean canProcreate()
     {
@@ -203,8 +229,9 @@ public class Sloth extends Animal
     }
 
     /**
-     * Get the escape probability of a rabbit.
-     * @return the escape probability of a rabbit.
+     * Get the escape probability of a sloth.
+     * 
+     * @return the escape probability of a sloth.
      */
     public static double getEscapeProbability(boolean isNight)
     {

@@ -8,8 +8,8 @@ import java.awt.Color;
  * A simple predator-prey simulator, based on a rectangular field
  * containing rabbits and foxes.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29 (2)
+ * @author Sebastian Tranaeus and Fengnachuan Xu
+ * @version 22/02/2018
  */
 public class Simulator
 {
@@ -32,20 +32,23 @@ public class Simulator
     private static final double GRASS_CREATION_PROBABILITY = 0.5;
     // The probability that an eagle will be created in any given grid position.
     private static final double EAGLE_CREATION_PROBABILITY = 0.11;
-    // The probability that an eagle will be created in any given grid position.
+    // The probability that an iguana will be created in any given grid position.
     private static final double IGUANA_CREATION_PROBABILITY = 0.13;
-    // The probability that an eagle will be created in any given grid position.
+    // The probability that a sloth will be created in any given grid position.
     private static final double SLOTH_CREATION_PROBABILITY = 0.12;
-
+    // The probability that an anthrax will be created in any given grid postition.
     private static final double ANTHRAX_CREATION_PROBABILITY = 0.005;
-
+    // The probability that there's rains.
     private static final double RAIN_PROBABILITY = 0.2;
+    // The probability that there's fog.
     private static final double FOG_PROBABILITY = 0.1;
+    // Whether it is raining.
     private static boolean isRaining = false;
+    // Whether it is foggy.
     private static boolean isFoggy = false;
-    // List of animals in the field.
+    // List of organisms in the field.
     private List<Organism> organisms;
-
+    // List of weather.
     private List<Weather> occuringWeather;
     // List of organism classes.
     private List<String> organismClasses;
@@ -53,13 +56,13 @@ public class Simulator
     private Field field;
     // The current step of the simulation.
     private int step;
-    // An instance of time: TODO: better comment
+    // Time of the day.
     private Time time;
     // A graphical view of the simulation.
     private SimulatorView view;
-
+    // Whether anthrax was created.
     private static boolean anthraxCreated;
-    
+    // A shared random number generator to control weather and the instance of organisms when we populate.
     private Random rand = Randomizer.getRandom();
 
     /**
@@ -72,22 +75,25 @@ public class Simulator
 
     /**
      * Create a simulation field with the given size.
+     * 
      * @param depth Depth of the field. Must be greater than zero.
      * @param width Width of the field. Must be greater than zero.
+     * @param sunRise The time of day it changes from night to day.
+     * @param sunSet The time of day it changes from day to night.
      */
     public Simulator(int depth, int width, int sunRise, int sunSet)
     {
+        // Check if the number they gave was greater than zero.
         if(width <= 0 || depth <= 0) {
             System.out.println("The dimensions must be greater than zero.");
             System.out.println("Using default values.");
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-
+        
         organisms = new ArrayList<>();
         occuringWeather = new ArrayList<>();
         field = new Field(depth, width);
-
         time = new Time(sunRise, sunSet);
 
         // Create a view of the state of each location in the field.
@@ -102,9 +108,13 @@ public class Simulator
         reset();
     }
     
-    public static void setAnthraxCreated(boolean newAthraxCreated){
-        System.out.println("        setAnthraxCreted called");
-        anthraxCreated = newAthraxCreated;
+    /**
+     * Set the value of anthraxCreated to newAnthraxCreated.
+     *  
+     * @param newAnthraxCreated A new value for anthraxCreated.
+     */
+    public static void setAnthraxCreated(boolean newAnthraxCreated){
+        anthraxCreated = newAnthraxCreated;
     }
 
     /**
@@ -119,6 +129,7 @@ public class Simulator
     /**
      * Run the simulation from its current state for the given number of steps.
      * Stop before the given number of steps if it ceases to be viable.
+     * 
      * @param numSteps The number of steps to run for.
      */
     public void simulate(int numSteps)
@@ -132,7 +143,7 @@ public class Simulator
     /**
      * Run the simulation from its current state for a single step.
      * Iterate over the whole field updating the state of each
-     * fox and rabbit.
+     * organisms.
      */
     public void simulateOneStep()
     {
@@ -143,7 +154,7 @@ public class Simulator
 
         // Provide space for newborn animals.
         List<Organism> newOrganisms = new ArrayList<>();        
-        // Let all rabbits act.
+        // Let all organisms act.
         for(Iterator<Organism> it = organisms.iterator(); it.hasNext(); ) {
             Organism organism = it.next();
             // if (! anthraxCreated) {
@@ -154,11 +165,9 @@ public class Simulator
                 it.remove();
             }
             }
-
-            // Add the newly born foxes and rabbits to the main lists.
-            organisms.addAll(newOrganisms);
-
-            view.showStatus(step, field, isNight);
+        // Add the newly born foxes and rabbits to the main lists.
+        organisms.addAll(newOrganisms);
+        view.showStatus(step, field, isNight);
         }
     
     // private void createAnthrax(Organism organism){
@@ -174,13 +183,18 @@ public class Simulator
         // }
     // }
 
+    /**
+     * For every weather instances, it tries to update them.
+     * If a weather doesnt exist, it tries to create it using the createWeather method.
+     * 
+     * @param isNight Whether it is night time.
+     */
     private void updateWeather(boolean isNight){
         createWeather(isNight);
-
         List<Weather> weatherToRemove = new ArrayList<Weather>();
         for (Weather weatherInstance : occuringWeather){
             weatherInstance.updateWeather();
-            if (! weatherInstance.isOccuring()){ // the code pattern here, wher exclamaton mark happens in brackets, should be used throughout project.
+            if (! weatherInstance.isOccuring()){
                 weatherToRemove.add(weatherInstance);
             }
         }
@@ -203,8 +217,12 @@ public class Simulator
         view.showStatus(step, field, isNight);
     }
 
+    /**
+     * Randomly make the day rain, fog or sunny.
+     * 
+     * @param isNight Whether it is night time.
+     */
     private void createWeather(boolean isNight){
-//        Random rand = Randomizer.getRandom(); // This is being used in mulitple methods. Declare it for the whole class.
         if (rand.nextDouble() <= RAIN_PROBABILITY && !isRaining){
             Rain rain = new Rain(isNight);
             isRaining = true;
@@ -214,14 +232,14 @@ public class Simulator
             isFoggy = true;
             occuringWeather.add(fog);
         }
+        //nothing changes for the organisms when its sunny so do not need to implement it
     }
 
     /**
-     * Randomly populate the field with foxes and rabbits.
+     * Randomly populate the field with foxes, rabbits, eagles, iguanas, sloths, grass and anthrax.
      */
     private void populate()
     {
-        //  Random rand = Randomizer.getRandom();
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {
@@ -254,7 +272,6 @@ public class Simulator
                     Location location = new Location(row, col);
                     Grass grass = new Grass(true, field, location);
                     organisms.add(grass);
-                    // else leave the location empty.
                 }
                 else if(rand.nextDouble() <= ANTHRAX_CREATION_PROBABILITY && !anthraxCreated) {
                     anthraxCreated = true;
@@ -262,12 +279,14 @@ public class Simulator
                     Anthrax anthrax = new Anthrax(field, location);
                     organisms.add(anthrax);
                 }
+                // else leave the location empty.
             }
         }
     }
 
     /**
      * Pause for a given time.
+     * 
      * @param millisec  The time to pause for, in milliseconds
      */
     private void delay(int millisec)
