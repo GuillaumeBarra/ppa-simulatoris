@@ -2,16 +2,13 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * A class representing shared characteristics of plants.
+ * An abstract class for all organisms that are plants.
  * 
  * @author Sebastian Tranaeus and Fengnachuan Xu
  * @version 22/02/2018
  */
 public abstract class Plant extends Organism
 {
-    // The plant's age.
-    private int age;
-    
     /**
      * Create a new plant at location in field.
      * 

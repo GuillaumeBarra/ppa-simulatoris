@@ -100,6 +100,7 @@ public class SimulatorView extends JFrame
      * Show the current status of the field.
      * @param step Which iteration step it is.
      * @param field The field whose status is to be displayed.
+     * @param isNight True if it is night, false otherwise.
      */
     public void showStatus(int step, Field field, boolean isNight)
     {

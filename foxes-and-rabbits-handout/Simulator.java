@@ -157,9 +157,6 @@ public class Simulator
         // Let all organisms act.
         for(Iterator<Organism> it = organisms.iterator(); it.hasNext(); ) {
             Organism organism = it.next();
-            // if (! anthraxCreated) {
-                // createAnthrax(organism);
-            // }
             organism.act(newOrganisms, isNight);
             if(! organism.isAlive()) {
                 it.remove();
@@ -169,19 +166,6 @@ public class Simulator
         organisms.addAll(newOrganisms);
         view.showStatus(step, field, isNight);
         }
-    
-    // private void createAnthrax(Organism organism){
-        // System.out.println("        organism:");
-        // System.out.println(organism);
-        // List<Location> free = field.getFreeAdjacentLocations(organism.getLocation());
-        // for (Location location : free){
-            // if(rand.nextDouble() <= ANTHRAX_CREATION_PROBABILITY && !anthraxCreated) {
-                // anthraxCreated = true;
-                // Anthrax anthrax = new Anthrax(field, location);
-                // organisms.add(anthrax);
-            // }
-        // }
-    // }
 
     /**
      * For every weather instances, it tries to update them.
@@ -210,7 +194,7 @@ public class Simulator
         organisms.clear();
         populate();
         createWeather(time.isNight());
-        time.setTime(500);
+        time.setTime(480);
         boolean isNight = time.isNight();
 
         // Show the starting state in the view.
@@ -232,7 +216,7 @@ public class Simulator
             isFoggy = true;
             occuringWeather.add(fog);
         }
-        //nothing changes for the organisms when its sunny so do not need to implement it
+        // else, there are no particular weather phenonma occuring. Implicit good weather.
     }
 
     /**

@@ -12,7 +12,10 @@ import java.util.Random;
 public class Rabbit extends Animal
 {
     // Characteristics shared by all rabbits (class variables).
-
+    // A shared random number generator to control procreateing.
+    private static final Random rand = Randomizer.getRandom();
+    // The probability that the animal falls asleep.
+    private static final double SLEEP_PROBABILITY = 0.5;
     // The probability of a rabbit escaping from a predator.
     private static double escapeProbability = 0.5;
     // The probability change of a rabbit escaping from a predator.
@@ -27,16 +30,10 @@ public class Rabbit extends Animal
     private static final int PROCREATING_INTERVAL = 2;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 10;
-    // The food value of a single grass. In effect, this is the
-    // number of steps a rabbit can go before it has to eat again. 
+    // The food value of a single grass.
     private static final int GRASS_FOOD_VALUE = 5;
-    // A shared random number generator to control procreateing.
-    private static final Random rand = Randomizer.getRandom();
-    // The probability that the animal falls asleep.
-    private static final double SLEEP_PROBABILITY = 0.5;
 
     // Individual characteristics (instance fields).
-
     // The rabbit's age.
     private int age;
     // The age of the rabbit when it last bred.
@@ -47,8 +44,9 @@ public class Rabbit extends Animal
     private boolean isAsleep;
 
     /**
-     * Create a new rabbit. A rabbit may be created with age
-     * zero (a new born) or with a random age.
+     * Create a new rabbit. A rabbit can be created as a newborn (age zero,
+     * with a full stomach, and awake) or with a random age, food level,
+     * and it could be awake or asleep.
      * 
      * @param randomAge If true, the rabbit will have a random age.
      * @param field The field currently occupied.
@@ -98,7 +96,9 @@ public class Rabbit extends Animal
                         }
                     }
                 }
-                procreate(newRabbits);
+                if (canProcreate()){
+                    procreate(newRabbits);
+                }
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
                     // No food found - try to move to a free location.
@@ -115,35 +115,10 @@ public class Rabbit extends Animal
             }
         }
     }
-
-    /**
-     * Make this rabbit more hungry. This could result in the rabbit's death.
-     */
-    private void incrementHunger()
-    {
-        if (isAsleep) {
-            foodLevel -= 0.2;
-        } else {
-            foodLevel--;
-        }
-        
-        if(foodLevel <= 0) {
-            setDead();
-        }
-    }
     
     /**
-     * change the escape probability.
-     * 
-     * @param newEscapeProbability the new escape probability.
-     */
-    public static void setEscapeProbability(double newEscapeProbability){
-        escapeProbability = newEscapeProbability;
-    }
-
-    /**
-     * Look for rabbits adjacent to the current location.
-     * Only the first live rabbit is eaten.
+     * Look for grass adjacent to the current location.
+     * Only the first grass is eaten.
      * 
      * @return Where food was found, or null if it wasn't.
      */
@@ -166,24 +141,13 @@ public class Rabbit extends Animal
         }
         return null;
     }
-
+   
     /**
-     * Increase the age.
-     * This could result in the rabbit's death.
-     */
-    private void incrementAge()
-    {
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
-    }
-
-    /**
-     * Check whether or not this rabbit is to give birth at this step.
-     * New births will be made into free adjacent locations.
+     * Try to procreate.
+     * For all adjacent locations, if any of them is a Rabbit of the opposite sex, try to mate witht them.
+     * Newborns are placed in free adjacent locations.
      * 
-     * @param newRabbits A list to return newly born rabbits.
+     * @param newRabbits A list of newly born rabbits.
      */
     public void procreate(List<Organism> newRabbits)
     {
@@ -212,7 +176,47 @@ public class Rabbit extends Animal
     }
 
     /**
-     * A rabbit can procreate if it has reached the procreateing age.
+     * Increage hunger.
+     * If hunger goes below one, rabbit dies.
+     */
+    private void incrementHunger()
+    {
+        if (isAsleep) {
+            foodLevel -= 0.2;
+        } else {
+            foodLevel--;
+        }
+        
+        if(foodLevel <= 0) {
+            setDead();
+        }
+    }
+    
+    /**
+     * Change the escape probability.
+     * 
+     * @param newEscapeProbability The new value of escapeProbability.
+     */
+    public static void setEscapeProbability(double newEscapeProbability)
+    {
+        escapeProbability = newEscapeProbability;
+    }
+
+    /**
+     * Increase age by one.
+     * If age goes above the organism's max age, it dies.
+     */
+    private void incrementAge()
+    {
+        age++;
+        if(age > MAX_AGE) {
+            setDead();
+        }
+    }
+
+    /**
+     * A rabbit can procreate if it has reached the procreateing age,
+     * or if it hasn't procreated in its procreating interval.
      * 
      * @return true if the rabbit can procreate, false otherwise.
      */

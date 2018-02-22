@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * A class representing shared characteristics of animals.
+ * An abstract class representing shared characteristics of animals.
  * 
  * @author Sebastian Tranaeus and Fengnachuan Xu
  * @version 22/02/2018
@@ -13,7 +13,7 @@ public abstract class Animal extends Organism
     private String sex;
     
     /**
-     * Create a new animal at location in field.
+     * Create a new animal and determine its sex.
      * 
      * @param field The field currently occupied.
      * @param location The location within the field.

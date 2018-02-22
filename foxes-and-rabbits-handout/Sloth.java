@@ -12,28 +12,26 @@ import java.util.Random;
 public class Sloth extends Animal
 {
     // Characteristics shared by all sloths (class variables).
-
+    // A shared random number generator to control procreateing.
+    private static final Random rand = Randomizer.getRandom();
+    // The probability that the animal falls asleep.
+    private static final double SLEEP_PROBABILITY = 0.5;
     // The probability of a sloth escaping from a predator.
     private static double escapeProbability = 0.2;
     // The probability change of a sloth escaping from a predator.
     private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
-    // The age at which a sloth can start to procreate.
-    private static final int PROCREATING_AGE = 5;
     // The age to which a sloth can live.
     private static final int MAX_AGE = 30;
+    // The age at which a sloth can start to procreate.
+    private static final int PROCREATING_AGE = 5;
     // The likelihood of a sloth procreateing when it meets another sloth.
     private static final double PROCREATING_PROBABILITY = 0.2;
     // The number of years before a sloth can procreate again.
     private static final int PROCREATING_INTERVAL = 6;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
-    // The food value of a single grass. In effect, this is the
-    // number of steps a sloth can go before it has to eat again. 
+    // The food value of a single grass.
     private static final int GRASS_FOOD_VALUE = 5;
-    // A shared random number generator to control procreateing.
-    private static final Random rand = Randomizer.getRandom();
-    // The probability that the animal falls asleep.
-    private static final double SLEEP_PROBABILITY = 0.5;
 
     // Individual characteristics (instance fields).
     // The sloth's age.
@@ -46,8 +44,9 @@ public class Sloth extends Animal
     private boolean isAsleep;
 
     /**
-     * Create a new sloth. A sloth may be created with age
-     * zero (a new born) or with a random age.
+     * Create a new sloth. A sloth can be created as a newborn (age zero,
+     * with a full stomach, and awake) or with a random age, food level,
+     * and it could be awake or asleep.
      * 
      * @param randomAge If true, the sloth will have a random age.
      * @param field The field currently occupied.
@@ -98,7 +97,9 @@ public class Sloth extends Animal
                         return;
                     }
                 }
-                procreate(newSloths);
+                if (canProcreate()){
+                    procreate(newSloths);
+                }
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
                     // No food found - try to move to a free location.
@@ -113,40 +114,6 @@ public class Sloth extends Animal
                     setDead();
                 }
             }
-        }
-    }
-    
-    /**
-     * return the escape probability.
-     * 
-     * @return escape probability.
-     */
-    public static double getEscapeProbability(){
-        return escapeProbability;
-    }
-    
-    /**
-     * change the escape probability.
-     * 
-     * @param newEscapeProbability the new escape probability.
-     */
-    public static void setEscapeProbability(double newEscapeProbability){
-        escapeProbability = newEscapeProbability;
-    }
-
-    /**
-     * Make this sloth more hungry. This could result in the sloth's death.
-     */
-    private void incrementHunger()
-    {
-        if (isAsleep) {
-            foodLevel -= 0.2;
-        } else {
-            foodLevel--;
-        }
-        
-        if(foodLevel <= 0) {
-            setDead();
         }
     }
 
@@ -174,23 +141,13 @@ public class Sloth extends Animal
         }
         return null;
     }
-
+    
     /**
-     * Increase the age.
-     * This could result in the sloth's death.
-     */
-    private void incrementAge()
-    {
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
-    }
-
-    /**
-     * Check whether or not this sloth is to give birth at this step.
-     * New births will be made into free adjacent locations.
-     * @param newSloths A list to return newly born sloths.
+     * Try to procreate.
+     * For all adjacent locations, if any of them is an Sloth of the opposite sex, try to mate witht them.
+     * Newborns are placed in free adjacent locations.
+     * 
+     * @param newSloth A list of newly born sloths.
      */
     public void procreate(List<Organism> newSloths)
     {
@@ -217,9 +174,59 @@ public class Sloth extends Animal
             }
         }
     }
+    
+    /**
+     * Return the escape probability.
+     * 
+     * @return escape probability.
+     */
+    public static double getEscapeProbability()
+    {
+        return escapeProbability;
+    }
+    
+    /**
+     * Change the escape probability.
+     * 
+     * @param newEscapeProbability The new value of escapeProbability.
+     */
+    public static void setEscapeProbability(double newEscapeProbability)
+    {
+        escapeProbability = newEscapeProbability;
+    }
+    
+    /**
+     * Increage hunger.
+     * If hunger goes below one, sloth dies.
+     */
+    private void incrementHunger()
+    {
+        if (isAsleep) {
+            foodLevel -= 0.2;
+        } else {
+            foodLevel--;
+        }
+        
+        if(foodLevel <= 0) {
+            setDead();
+        }
+    }
 
     /**
-     * A sloth can procreate if it has reached the procreateing age.
+     * Increase age by one.
+     * If age goes above the organism's max age, it dies.
+     */
+    private void incrementAge()
+    {
+        age++;
+        if(age > MAX_AGE) {
+            setDead();
+        }
+    }
+
+    /**
+     * A sloth can procreate if it has reached the procreateing age,
+     * or if it hasn't procreated in its procreating interval.
      * 
      * @return true if the sloth can procreate, false otherwise.
      */

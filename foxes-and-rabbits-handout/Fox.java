@@ -12,7 +12,10 @@ import java.util.Random;
 public class Fox extends Animal
 {
     // Characteristics shared by all foxes (class variables).
-
+    // A shared random number generator to control procreating and hunting.
+    private static final Random rand = Randomizer.getRandom();
+    // The probability that a fox falls asleep.
+    private static final double SLEEP_PROBABILITY = 0.5;
     // The probability of a fox catching a prey successfully.
     private static double huntingProbability = 0.4;
     // The probability change of a fox catching a prey successfully.
@@ -27,15 +30,10 @@ public class Fox extends Animal
     private static final int PROCREATING_INTERVAL = 9;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
-    // The food value of a single rabbit. In effect, this is the
-    // number of steps a fox can go before it has to eat again.
+    // The food value of a single rabbit.
     private static final int RABBIT_FOOD_VALUE = 9;
     // The food value of a single sloth.
     private static final int SLOTH_FOOD_VALUE = 4;
-    // A shared random number generator to control procreating and hunting.
-    private static final Random rand = Randomizer.getRandom();
-    // The probability that a fox falls asleep.
-    private static final double SLEEP_PROBABILITY = 0.5;
 
     // Individual characteristics (instance fields).
     // The fox's age.
@@ -48,8 +46,9 @@ public class Fox extends Animal
     private  boolean isAsleep = false;
 
     /**
-     * Create a fox. A fox can be created as a new born (age zero
-     * and not hungry) or with a random age and food level.
+     * Create a fox. A fox can be created as a newborn (age zero,
+     * with a full stomach, and awake) or with a random age, food level,
+     * and it could be awake or asleep.
      * 
      * @param randomAge If true, the fox will have random age and hunger level.
      * @param field The field currently occupied.
@@ -61,30 +60,13 @@ public class Fox extends Animal
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
             foodLevel = rand.nextInt(RABBIT_FOOD_VALUE + SLOTH_FOOD_VALUE);
+            isAsleep = rand.nextBoolean();
         }
         else {
             age = 0;
             foodLevel = RABBIT_FOOD_VALUE + SLOTH_FOOD_VALUE; // could be an issue
+            isAsleep = false;
         }
-    }
-    
-    /**
-     * Get the hungting probability.
-     * 
-     * @return hungtingProbability.
-     */
-    public static double getHuntingProbability(){
-        return huntingProbability;
-    }
-
-    /**
-     * Change the hungting probability.
-     * 
-     * @param newHuntingProbability The new hungting probability.
-     */
-    public static void setHuntingProbability(double newHuntingProbability){
-        assert newHuntingProbability >= 0 : "Eagle hunting probability below zero!!" + newHuntingProbability;
-        huntingProbability = newHuntingProbability;
     }
 
     /**
@@ -116,7 +98,9 @@ public class Fox extends Animal
                         return;
                     }
                 }
-                procreate(newFoxes); 
+                if (canProcreate()){
+                    procreate(newFoxes);
+                }
                 // Move towards a source of food if found.
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
@@ -132,28 +116,6 @@ public class Fox extends Animal
                     setDead();
                 }
             }
-        }
-    }
-
-    /**
-     * Increase the age. This could result in the fox's death.
-     */
-    private void incrementAge()
-    {
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
-    }
-
-    /**
-     * Make this fox more hungry. This could result in the fox's death.
-     */
-    private void incrementHunger()
-    {
-        foodLevel--;
-        if(foodLevel <= 0) {
-            setDead();
         }
     }
 
@@ -206,15 +168,59 @@ public class Fox extends Animal
     }
 
     /**
-     * Check whether or not this fox is to give birth at this step.
-     * New births will be made into free adjacent locations.
+     * Get the hunting probability.
      * 
-     * @param newFoxes A list to return newly born foxes.
+     * @return huntingProbability.
+     */
+    public static double getHuntingProbability()
+    {
+        return huntingProbability;
+    }
+
+    /**
+     * Change the hunting probability.
+     * 
+     * @param newHuntingProbability The ne value of huntingProbability.
+     */
+    public static void setHuntingProbability(double newHuntingProbability)
+    {
+        assert newHuntingProbability >= 0 : "Eagle hunting probability below zero!!" + newHuntingProbability;
+        huntingProbability = newHuntingProbability;
+    }
+
+    /**
+     * Increase age by one.
+     * If age goes above the organism's max age, it dies.
+     */
+    private void incrementAge()
+    {
+        age++;
+        if(age > MAX_AGE) {
+            setDead();
+        }
+    }
+
+    /**
+     * Increage hunger.
+     * If hunger goes below one, fox dies.
+     */
+    private void incrementHunger()
+    {
+        foodLevel--;
+        if(foodLevel <= 0) {
+            setDead();
+        }
+    }
+
+    /**
+     * Try to procreate.
+     * For all adjacent locations, if any of them is an Fox of the opposite sex, try to mate witht them.
+     * Newborns are placed in free adjacent locations.
+     * 
+     * @param newFoxes A list of newly born foxes.
      */
     public void procreate(List<Organism> newFoxes)
     {
-        // New foxes are born into adjacent locations.
-        // Get a list of adjacent free locations.
         String sex = getSex();
         Field field = getField();
         List<Location> free = field.getFreeAdjacentLocations(getLocation());
@@ -240,7 +246,8 @@ public class Fox extends Animal
     }
 
     /**
-     * A fox can procreate if it has reached the procreateing age.
+     * A fox can procreate if it has reached the procreateing age,
+     * or if it hasn't procreated in its procreating interval.
      * 
      * @return true if the fox can procreate, false otherwise.
      */

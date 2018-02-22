@@ -7,17 +7,18 @@
  */
 public abstract class Weather
 {
+    // Individual characteristics (instance fields).
     // Whether the weather is occuring.
     private boolean occuring;
-    // Whether it is night time.
-    protected boolean isNight;
     
     /**
+     * Create an instance of Wether.
      * 
+     * @param isNight Whether it is night time.
      */
-    public Weather(boolean isNight){
+    public Weather()
+    {
         occuring = true;
-        isNight = isNight;
     }
     
     /**
@@ -28,23 +29,25 @@ public abstract class Weather
     /**
      * Change the behaviour of the animals.
      * 
-     * @param reset Whether we reset the behaviour of the animals
+     * @param reset Whether we reset the behaviour of the animals or not.
      */
     public abstract void setProbabilities(boolean reset);
     
     /**
-     * Return the whether if the weather is occuring.
+     * Return if the weather is occuring or not.
      * 
-     * @return true if it is occuring.
+     * @return true if it is occuring, false otherwise.
      */
-    public boolean isOccuring(){
+    public boolean isOccuring()
+    {
         return occuring;
     }
     
     /**
      * Stop the weather from occuring
      */
-    public void endOccurence(){
+    public void endOccurence()
+    {
         occuring = false;
     }
 }

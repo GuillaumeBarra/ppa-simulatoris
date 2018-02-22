@@ -1,23 +1,25 @@
 import java.util.List;
 import java.util.ArrayList;
 /**
- * Abstract class Organism - A class representing shared characteristics of all organisms.
+ * An abstract class representing shared characteristics of all organisms.
  *
  * @author Sebastian Tranaeus and Fengnachuan Xu
  * @version 22/02/2018
  */
 public abstract class Organism
 {
-    // Whether the animal is alive or not.
+        
+    // Individual characteristics (instance fields).
+    // Whether the organism is alive or not.
     private boolean alive;
-    // Whether the animal is infected or not.
+    // Whether the organism is infected or not.
     private boolean infected;
-    // The animal's field.
+    // The organism's field.
     private Field field;
-    // The animal's position in the field.
+    // The organism's position in the field.
     private Location location;
     /**
-     * Create a new animal at location in field.
+     * Create a new organism at location in field.
      * 
      * @param field The field currently occupied.
      * @param location The location within the field.
@@ -31,25 +33,26 @@ public abstract class Organism
     }
 
     /**
-     * Make this animal act - that is: make it do
-     * whatever it wants/needs to do.
+     * Abstract method for main organism behaviour.
+     * Implented in children classes.
      * 
-     * @param newOrganisms A list to receive newly born animals.
+     * @param newOrganisms A list to receive newly born organisms.
      * @param isNight A boolean value that is true when night time, false if otherwise.
      */
     abstract public void act(List<Organism> newOrganisms, boolean isNight);
     
     /**
-     * Make this animal procreate - that is: make it breed
+     * Abstract method for organism procreation.
+     * Implemented in children classes.
      * 
-     * @param newOrganisms A list to receive newly born animals.
+     * @param newOrganisms A list to receive newly born organisms.
      */
     abstract public void procreate(List<Organism> newOrganisms); 
 
     /**
-     * Check whether the animal is alive or not.
+     * Check whether the organism is alive or not.
      * 
-     * @return true if the animal is still alive.
+     * @return true if the organism is still alive.
      */
     protected boolean isAlive()
     {
@@ -57,9 +60,9 @@ public abstract class Organism
     }
 
     /**
-     * Check whether the animal is alive or not.
+     * Check whether the organism is infected or not.
      * 
-     * @return true if the animal is still alive.
+     * @return true if the organism is infected.
      */
     protected boolean isInfected()
     {
@@ -67,8 +70,8 @@ public abstract class Organism
     }
     
     /**
-     * Indicate that the animal is no longer alive.
-     * It is removed from the field.
+     * Kill the organism.
+     * Set its location variables to null and remove it from the field.
      */
     protected void setDead()
     {
@@ -82,9 +85,9 @@ public abstract class Organism
     }
 
     /**
-     * Return the animal's location.
+     * Return the organism's location.
      * 
-     * @return The animal's location.
+     * @return The organism's location.
      */
     protected Location getLocation()
     {
@@ -92,9 +95,9 @@ public abstract class Organism
     }
 
     /**
-     * Place the animal at the new location in the given field.
+     * Place the organism at the new location in the given field.
      * 
-     * @param newLocation The animal's new location.
+     * @param newLocation The organism's new location.
      */
     protected void setLocation(Location newLocation)
     {
@@ -106,9 +109,9 @@ public abstract class Organism
     }
 
     /**
-     * Return the animal's field.
+     * Return the organism's field.
      * 
-     * @return The animal's field.
+     * @return The organism's field.
      */
     protected Field getField()
     {

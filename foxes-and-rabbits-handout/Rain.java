@@ -1,6 +1,6 @@
 
 /**
- * Make it rain.
+ * Simulate rain.
  * Changes the behaviour of some animals.
  *
  * @author Sebastian Tranaeus and Fengnachuan Xu
@@ -8,11 +8,9 @@
  */
 public class Rain extends Weather
 {
-    // How long the rain goes on for.
-    private static final int DURATION = 10;// number of steps
-    // How long the rain has been going on for.
-    private int age; 
-    
+    // Class variables
+    // How long the rain goes on for in steps.
+    private static final int DURATION = 10;
     // The change of eagle's hunting probability.
     private static final double EAGLE_HUNTING_PROBABILITY = -0.05;
     // The change of anthrax's infection probability.
@@ -20,6 +18,11 @@ public class Rain extends Weather
     // The change of sloth's escape probability.
     private static final double SLOTH_ESCAPE_PROBABILITY = -0.1;
     
+    // Individual characteristics (instance fields).
+    // How long the rain has been going on for.
+    private int age; 
+    // Wether or not it is night
+    private boolean isNight;
     /**
      * Start raining and change the behaviour of some animals.
      * 
@@ -27,7 +30,8 @@ public class Rain extends Weather
      */
     public Rain(boolean isNight)
     {
-        super(isNight);
+        super();
+        isNight = isNight;
         age = 0;
         setProbabilities(false);
     }
@@ -35,9 +39,10 @@ public class Rain extends Weather
     /**
      * Change the behaviour of the animals.
      * 
-     * @param reset Whether we reset the behaviour of the animals
+     * @param reset Whether we reset the behaviour of the organisms or not
      */
-    public void setProbabilities(boolean reset){
+    public void setProbabilities(boolean reset)
+    {
         // need to assert these are greater than zero !!
         if (reset) {
             Eagle.setHuntingProbability(Eagle.getHuntingProbability() - EAGLE_HUNTING_PROBABILITY);
@@ -53,7 +58,8 @@ public class Rain extends Weather
     /**
      * Check if the weather keep going or does it stop.
      */
-    public void updateWeather(){
+    public void updateWeather()
+    {
         age += 1;
         if (age >= DURATION) {
             setProbabilities(true);

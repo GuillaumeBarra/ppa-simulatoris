@@ -12,11 +12,10 @@ import java.util.Random;
 public class Eagle extends Animal
 {
     // Characteristics shared by all eagles (class variables).
-
-    // The probability of an eagle catching a prey successfully.
-    private static double huntingProbability = 0.4;
-    // The probability change of an eagle catching a prey successfully.
-    private static final double HUNTING_PROBABILITY_CHANGE = -0.05;
+    // A shared random number generator to control procreateing.
+    private static final Random rand = Randomizer.getRandom();
+    // The probability that the animal falls asleep.
+    private static final double SLEEP_PROBABILITY = 0.5;
     // The age at which an eagle can start to procreate.
     private static final int PROCREATING_AGE = 5;
     // The age to which an eagle can live.
@@ -27,15 +26,14 @@ public class Eagle extends Animal
     private static final int PROCREATING_INTERVAL = 9;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
-    // The food value of a single rabbit. In effect, this is the
-    // number of steps an eagle can go before it has to eat again.
+    // The probability of an eagle catching a prey successfully.
+    private static double huntingProbability = 0.4;
+    // The probability change of an eagle catching a prey successfully when it's night.
+    private static final double HUNTING_PROBABILITY_CHANGE = -0.05;
+    // The food value of a single rabbit.
     private static final int RABBIT_FOOD_VALUE = 9;
     // The food value of a single iguana.
     private static final int IGUANA_FOOD_VALUE = 12;
-    // A shared random number generator to control procreateing.
-    private static final Random rand = Randomizer.getRandom();
-    // The probability that the animal falls asleep.
-    private static final double SLEEP_PROBABILITY = 0.5;
 
     // Individual characteristics (instance fields).
     // an eagle's age.
@@ -48,8 +46,9 @@ public class Eagle extends Animal
     private  boolean isAsleep = false;
 
     /**
-     * Create an eagle. An eagle can be created as a new born (age zero
-     * and not hungry) or with a random age and food level.
+     * Create an eagle. An eagle can be created as a newborn (age zero,
+     * with a full stomach, and awake) or with a random age, food level,
+     * and it could be awake or asleep.
      * 
      * @param randomAge If true, the eagle will have random age and hunger level.
      * @param field The field currently occupied.
@@ -61,10 +60,12 @@ public class Eagle extends Animal
         if(randomAge) {
             age = rand.nextInt(MAX_AGE);
             foodLevel = rand.nextInt(RABBIT_FOOD_VALUE + IGUANA_FOOD_VALUE);
+            isAsleep = rand.nextBoolean();
         }
         else {
             age = 0;
             foodLevel = RABBIT_FOOD_VALUE + IGUANA_FOOD_VALUE;
+            isAsleep = false;
         }
     }
 
@@ -97,7 +98,9 @@ public class Eagle extends Animal
                         return;
                     }
                 }
-                procreate(newEagles); 
+                if (canProcreate()){
+                    procreate(newEagles);
+                }
                 // Move towards a source of food if found.
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
@@ -115,51 +118,10 @@ public class Eagle extends Animal
             }
         }
     }
-
-    /**
-     * Increase the age. This could result in the eagle's death.
-     */
-    private void incrementAge()
-    {
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
-    }
-
-    /**
-     * Make this eagle more hungry. This could result in the eagle's death.
-     */
-    private void incrementHunger()
-    {
-        foodLevel--;
-        if(foodLevel <= 0) {
-            setDead();
-        }
-    }
-
-    /**
-     * Get the hungting probability.
-     * 
-     * @return hungtingProbability.
-     */
-    public static double getHuntingProbability(){
-        return huntingProbability;
-    }
-
-    /**
-     * Change the hungting probability.
-     * 
-     * @param newHuntingProbability The new hungting probability.
-     */
-    public static void setHuntingProbability(double newHuntingProbability){
-        assert newHuntingProbability >= 0 : "Eagle hunting probability below zero!!" + newHuntingProbability;
-        huntingProbability = newHuntingProbability;
-    }
-
+    
     /**
      * Look for rabbits and iguanas adjacent to the current location.
-     * Only the first live prey is eaten.
+     * Only the first alive prey is eaten.
      * 
      * @param isNight Whether it is night time.
      * @return Where food was found, or null if it wasn't.
@@ -206,10 +168,11 @@ public class Eagle extends Animal
     }
 
     /**
-     * Check whether or not this eagle is to give birth at this step.
-     * New births will be made into free adjacent locations.
+     * Try to procreate.
+     * For all adjacent locations, if any of them is an Eagle of the opposite sex, try to mate witht them.
+     * Newborns are placed in free adjacent locations.
      * 
-     * @param newEagles A list to return newly born eagles.
+     * @param newEagles A list of newly born eagles.
      */
     public void procreate(List<Organism> newEagles)
     {
@@ -240,7 +203,53 @@ public class Eagle extends Animal
     }
 
     /**
-     * An eagle can procreate if it has reached the procreateing age.
+     * Increase age by one.
+     * If age goes above the organism's max age, it dies.
+     */
+    private void incrementAge()
+    {
+        age++;
+        if(age > MAX_AGE) {
+            setDead();
+        }
+    }
+
+    /**
+     * Increage hunger.
+     * If hunger goes below one, eagle dies.
+     */
+    private void incrementHunger()
+    {
+        foodLevel--;
+        if(foodLevel <= 0) {
+            setDead();
+        }
+    }
+
+    /**
+     * Get the hunting probability.
+     * 
+     * @return huntingProbability.
+     */
+    public static double getHuntingProbability()
+    {
+        return huntingProbability;
+    }
+
+    /**
+     * Change the hunting probability.
+     * 
+     * @param newHuntingProbability The new value of huntingProbability.
+     */
+    public static void setHuntingProbability(double newHuntingProbability)
+    {
+        assert newHuntingProbability >= 0 : "Eagle hunting probability below zero!!" + newHuntingProbability;
+        huntingProbability = newHuntingProbability;
+    }
+
+    /**
+     * A eagle can procreate if it has reached the procreateing age,
+     * or if it hasn't procreated in its procreating interval.
      * 
      * @return true if the fox can procreate, false otherwise.
      */

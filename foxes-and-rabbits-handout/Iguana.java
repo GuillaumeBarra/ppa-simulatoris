@@ -12,7 +12,10 @@ import java.util.Random;
 public class Iguana extends Animal
 {
     // Characteristics shared by all iguanas (class variables).
-
+    // A shared random number generator to control procreateing.
+    private static final Random rand = Randomizer.getRandom();
+    // The probability that the animal falls asleep.
+    private static final double SLEEP_PROBABILITY = 0.5;
     // The probability of a iguana escaping from a predator.
     private static double escapeProbability = 0.3;
     // The probability change of a iguana escaping from a predator.
@@ -27,17 +30,10 @@ public class Iguana extends Animal
     private static final int PROCREATING_INTERVAL = 8;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
-    // The food value of a single grass. In effect, this is the
-    // number of steps a iguana can go before it has to eat again. 
+    // The food value of a single grass 
     private static final int GRASS_FOOD_VALUE = 4;
-    // A shared random number generator to control procreateing.
-    private static final Random rand = Randomizer.getRandom();
-    // Wether or not the iguana is asleep.
-    // The probability that the animal falls asleep.
-    private static final double SLEEP_PROBABILITY = 0.5;
-
+   
     // Individual characteristics (instance fields).
-
     // The iguana's age.
     private int age;
     // The age of the iguana when it last bred.
@@ -48,8 +44,9 @@ public class Iguana extends Animal
     private boolean isAsleep;
 
     /**
-     * Create a new iguana. A iguana may be created with age
-     * zero (a new born) or with a random age.
+     * Create a new iguana. A iguana can be created as a newborn (age zero,
+     * with a full stomach, and awake) or with a random age, food level,
+     * and it could be awake or asleep.
      * 
      * @param randomAge If true, the iguana will have a random age.
      * @param field The field currently occupied.
@@ -100,7 +97,9 @@ public class Iguana extends Animal
                         }
                     }
                 }
-                procreate(newIguanas);
+                if (canProcreate()){
+                    procreate(newIguanas);
+                }
                 Location newLocation = findFood(isNight);
                 if(newLocation == null) { 
                     // No food found - try to move to a free location.
@@ -115,22 +114,6 @@ public class Iguana extends Animal
                     setDead();
                 }
             }
-        }
-    }
-
-    /**
-     * Make this iguana more hungry. This could result in the iguana's death.
-     */
-    private void incrementHunger()
-    {
-        if (isAsleep) {
-            foodLevel -= 0.2;
-        } else {
-            foodLevel--;
-        }
-
-        if(foodLevel <= 0) {
-            setDead();
         }
     }
 
@@ -161,22 +144,11 @@ public class Iguana extends Animal
     }
 
     /**
-     * Increase the age.
-     * This could result in the iguana's death.
-     */
-    private void incrementAge()
-    {
-        age++;
-        if(age > MAX_AGE) {
-            setDead();
-        }
-    }
-
-    /**
-     * Check whether or not this iguana is to give birth at this step.
-     * New births will be made into free adjacent locations.
+     * Try to procreate.
+     * For all adjacent locations, if any of them is an Iguana of the opposite sex, try to mate witht them.
+     * Newborns are placed in free adjacent locations.
      * 
-     * @param newIguanas A list to return newly born iguanas.
+     * @param newIguana A list of newly born Iguana.
      */
     public void procreate(List<Organism> newIguanas)
     {
@@ -205,7 +177,37 @@ public class Iguana extends Animal
     }
 
     /**
-     * An iguana can procreate if it has reached the procreateing age.
+     * Increage hunger.
+     * If hunger goes below one, iguana dies.
+     */
+    private void incrementHunger()
+    {
+        if (isAsleep) {
+            foodLevel -= 0.2;
+        } else {
+            foodLevel--;
+        }
+
+        if(foodLevel <= 0) {
+            setDead();
+        }
+    }
+
+    /**
+     * Increase age by one.
+     * If age goes above the organism's max age, it dies.
+     */
+    private void incrementAge()
+    {
+        age++;
+        if(age > MAX_AGE) {
+            setDead();
+        }
+    }
+
+    /**
+     * A iguana can procreate if it has reached the procreateing age,
+     * or if it hasn't procreated in its procreating interval.
      * 
      * @return true if the iguana can procreate, false otherwise.
      */

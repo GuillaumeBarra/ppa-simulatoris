@@ -29,6 +29,7 @@ public class FieldStats
 
     /**
      * Get details of what is in the field.
+     * Display population details, and the number of organisms infected.
      * @return A string describing what is in the field.
      */
     public String getPopulationDetails(Field field)

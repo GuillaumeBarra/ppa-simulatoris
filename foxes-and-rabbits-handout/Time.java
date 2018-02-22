@@ -2,12 +2,15 @@
  * Class for simulating the passage of time in day.
  * Does not account for the date. Only the time of the day.
  * Time is handled in minutes.
+ * The day starts at minute 1, which represents 1 minute after midnight.
+ * The day ends at minute 1440, which represents midnight.
  *
  * @author Sebastian Tranaeus and Fengnachuan Xu
  * @version 22/02/2018
  */
 public class Time
 {
+    // Individual characteristics (instance fields).
     // minutes in the day. From 0 to 1440 inclusive.
     private int minutes;
     // minutes in the day when sunrise begins.
@@ -16,14 +19,14 @@ public class Time
     private int sunSet;
 
     /**
-     * Create an instance of time
+     * Create an instance of time.
      * 
      * @param sunRise The time in minutes for the sunrise.
      * @param sunSet The time in minutes for the sunset.
      */
     public Time(int sunRise, int sunSet)
     {
-        this.minutes = 500;
+        this.minutes = 480; // time starts at 8AM
         this.sunRise = sunRise;
         this.sunSet = sunSet;
     }
@@ -51,12 +54,16 @@ public class Time
         return minutes;
     }
     
-    // should this be a reset instead?
-    public void setTime(int minutes){
+    /**
+     * Set the time in minutes to a particular number
+     * 
+     * @param minutes The value to set minutes to.
+     */
+    public void setTime(int minutes)
+    {
         minutes = minutes;
     }
-    
-    
+
     /**
      * Return wether or not it is night time.
      * @return true if night, false otherwise

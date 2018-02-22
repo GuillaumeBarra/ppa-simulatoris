@@ -11,17 +11,24 @@ import java.util.Iterator;
  */
 public class Grass extends Plant
 {
-    private static final int MAX_AGE = 20;
-    private static final double PROCREATING_PROBABILITY = 0.5;
-    private static final double PROCREATING_AGE = 5;
-    private static final int MAX_LITTER_SIZE = 2; //NOTE better name
+    // Characteristics shared by all grasses (class variables).
+    // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
+    // The age to which a grass can live.
+    private static final int MAX_AGE = 20;
+    // The likelihood of a iguana procreateing when it meets another iguana.
+    private static final double PROCREATING_PROBABILITY = 0.5;
+    // The age at which a iguana can start to procreate.
+    private static final double PROCREATING_AGE = 5;
+    // The maximum number of births.
+    private static final int MAX_LITTER_SIZE = 2;
+    
+    // Individual characteristics (instance fields).
     private int age;
-
     /**
-     * Create instancs of grass
+     * Create instance of grass
      * 
-     * @param randomAge If true, the fox will have random age and hunger level.
+     * @param randomAge If true, the grass will have random age and hunger level.
      * @param field The field currently occupied.
      * @param location The location within the field.
      */
@@ -37,10 +44,10 @@ public class Grass extends Plant
     }
 
     /**
-     * Check whether or not this grass is to procreate at this step.
-     * New births will be made into free adjacent locations.
+     * Try to procreate.
+     * New grass is placed in free adjacent locations.
      * 
-     * @param newGrasses A list to return newly created grass.
+     * @param newGrasses A list of new grasses.
      */
     public void procreate(List<Organism> newGrasses)
     {
@@ -59,9 +66,10 @@ public class Grass extends Plant
             }
         }
     }
-
+    
     /**
-     * Increase the age. This could result in the grass's death.
+     * Increase age by one.
+     * If age goes above the organism's max age, it dies.
      */
     private void incrementAge()
     {
@@ -72,7 +80,7 @@ public class Grass extends Plant
     }
 
     /**
-     * Let the grass increase in age and create new grasses.
+     * Increase grass' age and try to procreate.
      * 
      * @param newGrasses A list to return newly created grass.
      * @param isNight Whether it is night time.
