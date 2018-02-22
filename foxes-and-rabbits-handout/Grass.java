@@ -15,13 +15,13 @@ public class Grass extends Plant
     // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
     // The age to which a grass can live.
-    private static final int MAX_AGE = 20;
+    private static final int MAX_AGE = 40;
     // The likelihood of a iguana procreateing when it meets another iguana.
-    private static final double PROCREATING_PROBABILITY = 0.5;
+    private static final double PROCREATING_PROBABILITY = 0.8;
     // The age at which a iguana can start to procreate.
     private static final double PROCREATING_AGE = 5;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 2;
+    private static final int MAX_LITTER_SIZE = 4;
     
     // Individual characteristics (instance fields).
     private int age;

@@ -21,17 +21,17 @@ public class Iguana extends Animal
     // The probability change of a iguana escaping from a predator.
     private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
     // The age at which a iguana can start to procreate.
-    private static final int PROCREATING_AGE = 10;
+    private static final int PROCREATING_AGE = 7;
     // The age to which a iguana can live.
-    private static final int MAX_AGE = 25;
+    private static final int MAX_AGE = 50;
     // The likelihood of a iguana procreateing when it meets another iguana.
-    private static final double PROCREATING_PROBABILITY = 0.22;
+    private static final double PROCREATING_PROBABILITY = 0.42;
     // The number of years before a iguana can procreate again.
-    private static final int PROCREATING_INTERVAL = 8;
+    private static final int PROCREATING_INTERVAL = 4;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 2;
+    private static final int MAX_LITTER_SIZE = 3;
     // The food value of a single grass 
-    private static final int GRASS_FOOD_VALUE = 4;
+    private static final int GRASS_FOOD_VALUE = 8;
    
     // Individual characteristics (instance fields).
     // The iguana's age.

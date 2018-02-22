@@ -17,7 +17,7 @@ public class Anthrax extends Organism
     // A shared random number generator to control procreating.
     private static final Random rand = Randomizer.getRandom();
     // The probability of an organism getting infected
-    private static double infectionProbability = 0.5;
+    private static double infectionProbability = 1;
     // The probability of an infected organism dying.
     private static final double DEAD_PROBABILITY = 0.3;
     // An ArrayList of type organism used to store the organisms that have been infected.

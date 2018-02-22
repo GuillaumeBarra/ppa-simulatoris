@@ -17,23 +17,23 @@ public class Eagle extends Animal
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.5;
     // The age at which an eagle can start to procreate.
-    private static final int PROCREATING_AGE = 5;
+    private static final int PROCREATING_AGE = 12;
     // The age to which an eagle can live.
-    private static final int MAX_AGE = 60;
+    private static final int MAX_AGE = 50;
     // The likelihood of an eagle procreateing when it meets another rabbit
-    private static final double PROCREATING_PROBABILITY = 0.08;
+    private static final double PROCREATING_PROBABILITY = 0.32;
     // The number of years before an eagle can procreate again.
-    private static final int PROCREATING_INTERVAL = 9;
+    private static final int PROCREATING_INTERVAL = 5;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 2;
     // The probability of an eagle catching a prey successfully.
-    private static double huntingProbability = 0.4;
+    private static double huntingProbability = 0.1;
     // The probability change of an eagle catching a prey successfully when it's night.
     private static final double HUNTING_PROBABILITY_CHANGE = -0.05;
     // The food value of a single rabbit.
     private static final int RABBIT_FOOD_VALUE = 9;
     // The food value of a single iguana.
-    private static final int IGUANA_FOOD_VALUE = 12;
+    private static final int IGUANA_FOOD_VALUE = 5;
 
     // Individual characteristics (instance fields).
     // an eagle's age.

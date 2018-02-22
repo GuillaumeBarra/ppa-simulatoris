@@ -21,17 +21,17 @@ public class Sloth extends Animal
     // The probability change of a sloth escaping from a predator.
     private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
     // The age to which a sloth can live.
-    private static final int MAX_AGE = 30;
-    // The age at which a sloth can start to procreate.
+    private static final int MAX_AGE = 35;
+    // The age at which a sloth can stat to procreate.
     private static final int PROCREATING_AGE = 5;
     // The likelihood of a sloth procreateing when it meets another sloth.
-    private static final double PROCREATING_PROBABILITY = 0.2;
+    private static final double PROCREATING_PROBABILITY = 0.3;
     // The number of years before a sloth can procreate again.
-    private static final int PROCREATING_INTERVAL = 6;
+    private static final int PROCREATING_INTERVAL = 3;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
     // The food value of a single grass.
-    private static final int GRASS_FOOD_VALUE = 5;
+    private static final int GRASS_FOOD_VALUE = 6;
 
     // Individual characteristics (instance fields).
     // The sloth's age.

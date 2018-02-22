@@ -29,7 +29,7 @@ public class Simulator
     // The probability that a rabbit will be created in any given grid position.
     private static final double RABBIT_CREATION_PROBABILITY = 0.15; 
     // The probability that grass will be created in any given grid position.
-    private static final double GRASS_CREATION_PROBABILITY = 0.5;
+    private static final double GRASS_CREATION_PROBABILITY = 0.4;
     // The probability that an eagle will be created in any given grid position.
     private static final double EAGLE_CREATION_PROBABILITY = 0.11;
     // The probability that an iguana will be created in any given grid position.
@@ -37,7 +37,7 @@ public class Simulator
     // The probability that a sloth will be created in any given grid position.
     private static final double SLOTH_CREATION_PROBABILITY = 0.12;
     // The probability that an anthrax will be created in any given grid postition.
-    private static final double ANTHRAX_CREATION_PROBABILITY = 0.005;
+    private static final double ANTHRAX_CREATION_PROBABILITY = 0.1;
     // The probability that there's rains.
     private static final double RAIN_PROBABILITY = 0.2;
     // The probability that there's fog.
