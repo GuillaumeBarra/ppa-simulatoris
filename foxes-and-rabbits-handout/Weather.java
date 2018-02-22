@@ -48,6 +48,7 @@ public abstract class Weather
      */
     public void endOccurence()
     {
+        System.out.println("        ending weather!");
         occuring = false;
     }
 }

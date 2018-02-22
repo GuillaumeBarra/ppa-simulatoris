@@ -10,11 +10,11 @@ public class Rain extends Weather
 {
     // Class variables
     // How long the rain goes on for in steps.
-    private static final int DURATION = 10;
+    private static final int DURATION = 30;
     // The change of eagle's hunting probability.
     private static final double EAGLE_HUNTING_PROBABILITY = -0.05;
     // The change of anthrax's infection probability.
-    private static final double ANTHRAX_INFECTION_PROBABILITY = 0.4;
+    private static final double ANTHRAX_INFECTION_PROBABILITY = 0.2;
     // The change of sloth's escape probability.
     private static final double SLOTH_ESCAPE_PROBABILITY = -0.1;
     

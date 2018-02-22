@@ -10,7 +10,7 @@ public class Fog extends Weather
 {
     // Class variables
     // How long the fog will go on for.
-    private static final int DURATION = 25;// number of steps
+    private static final int DURATION = 45;// number of steps
     // The change of eagle's hunting probability.
     private static final double EAGLE_HUNTING_PROBABILITY = -0.05;
     // The change of fox's hunting probability.

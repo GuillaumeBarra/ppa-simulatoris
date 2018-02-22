@@ -17,7 +17,7 @@ public class Rabbit extends Animal
     // The probability that the animal falls asleep.
     private static final double SLEEP_PROBABILITY = 0.5;
     // The probability of a rabbit escaping from a predator.
-    private static double escapeProbability = 0.5;
+    private static double escapeProbability = 0.7;
     // The probability change of a rabbit escaping from a predator.
     private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
     // The age at which a rabbit can start to procreate.

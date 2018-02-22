@@ -164,8 +164,8 @@ public class Simulator
             }
         // Add the newly born foxes and rabbits to the main lists.
         organisms.addAll(newOrganisms);
-        view.showStatus(step, field, isNight);
-        }
+        view.showStatus(step, field, isNight, isRaining, isFoggy);
+    }
 
     /**
      * For every weather instances, it tries to update them.
@@ -179,6 +179,11 @@ public class Simulator
         for (Weather weatherInstance : occuringWeather){
             weatherInstance.updateWeather();
             if (! weatherInstance.isOccuring()){
+                if (weatherInstance instanceof Rain){
+                    isRaining = false;
+                } else if (weatherInstance instanceof Fog){
+                    isFoggy = false;
+                }
                 weatherToRemove.add(weatherInstance);
             }
         }
@@ -198,7 +203,7 @@ public class Simulator
         boolean isNight = time.isNight();
 
         // Show the starting state in the view.
-        view.showStatus(step, field, isNight);
+        view.showStatus(step, field, isNight, isRaining, isFoggy);
     }
 
     /**

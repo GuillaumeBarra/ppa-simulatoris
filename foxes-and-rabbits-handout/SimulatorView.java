@@ -102,7 +102,7 @@ public class SimulatorView extends JFrame
      * @param field The field whose status is to be displayed.
      * @param isNight True if it is night, false otherwise.
      */
-    public void showStatus(int step, Field field, boolean isNight)
+    public void showStatus(int step, Field field, boolean isNight, boolean isRaining, boolean isFoggy)
     {
         if(!isVisible()) {
             setVisible(true);
@@ -113,8 +113,16 @@ public class SimulatorView extends JFrame
         } else {
             periodOfDay = "     DAY";
         }
+        
+        String weatherString = "    Weather: ";
+        if (isRaining){
+            weatherString += "RAINING ";
+        } 
+        if (isFoggy){
+            weatherString += "FOGGY ";
+        }
             
-        stepLabel.setText(STEP_PREFIX + step + periodOfDay);
+        stepLabel.setText(STEP_PREFIX + step + periodOfDay + weatherString);
         stats.reset();
         
         fieldView.preparePaint();

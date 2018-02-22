@@ -17,7 +17,7 @@ public class Fox extends Animal
     // The probability that a fox falls asleep.
     private static final double SLEEP_PROBABILITY = 0.4;
     // The probability of a fox catching a prey successfully.
-    private static double huntingProbability = 0.2;
+    private static double huntingProbability = 0.1;
     // The probability change of a fox catching a prey successfully.
     private static final double HUNTING_PROBABILITY_CHANGE = 0.1;
     // The age at which a fox can start to procreate.
