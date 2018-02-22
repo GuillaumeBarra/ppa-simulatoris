@@ -58,7 +58,9 @@ public class Simulator
     // A graphical view of the simulation.
     private SimulatorView view;
 
-    private boolean anthraxCreated;
+    private static boolean anthraxCreated;
+    
+    private Random rand = Randomizer.getRandom();
 
     /**
      * Construct a simulation field with default size.
@@ -98,6 +100,11 @@ public class Simulator
         view.setColor(Sloth.class, Color.PINK);
         // Setup a valid starting point.
         reset();
+    }
+    
+    public static void setAnthraxCreated(boolean newAthraxCreated){
+        System.out.println("        setAnthraxCreted called");
+        anthraxCreated = newAthraxCreated;
     }
 
     /**
@@ -139,17 +146,33 @@ public class Simulator
         // Let all rabbits act.
         for(Iterator<Organism> it = organisms.iterator(); it.hasNext(); ) {
             Organism organism = it.next();
+            // if (! anthraxCreated) {
+                // createAnthrax(organism);
+            // }
             organism.act(newOrganisms, isNight);
             if(! organism.isAlive()) {
                 it.remove();
             }
+            }
+
+            // Add the newly born foxes and rabbits to the main lists.
+            organisms.addAll(newOrganisms);
+
+            view.showStatus(step, field, isNight);
         }
-
-        // Add the newly born foxes and rabbits to the main lists.
-        organisms.addAll(newOrganisms);
-
-        view.showStatus(step, field);
-    }
+    
+    // private void createAnthrax(Organism organism){
+        // System.out.println("        organism:");
+        // System.out.println(organism);
+        // List<Location> free = field.getFreeAdjacentLocations(organism.getLocation());
+        // for (Location location : free){
+            // if(rand.nextDouble() <= ANTHRAX_CREATION_PROBABILITY && !anthraxCreated) {
+                // anthraxCreated = true;
+                // Anthrax anthrax = new Anthrax(field, location);
+                // organisms.add(anthrax);
+            // }
+        // }
+    // }
 
     private void updateWeather(boolean isNight){
         createWeather(isNight);
@@ -174,13 +197,14 @@ public class Simulator
         populate();
         createWeather(time.isNight());
         time.setTime(500);
+        boolean isNight = time.isNight();
 
         // Show the starting state in the view.
-        view.showStatus(step, field);
+        view.showStatus(step, field, isNight);
     }
 
     private void createWeather(boolean isNight){
-        Random rand = Randomizer.getRandom(); // This is being used in mulitple methods. Declare it for the whole class.
+//        Random rand = Randomizer.getRandom(); // This is being used in mulitple methods. Declare it for the whole class.
         if (rand.nextDouble() <= RAIN_PROBABILITY && !isRaining){
             Rain rain = new Rain(isNight);
             isRaining = true;
@@ -197,7 +221,7 @@ public class Simulator
      */
     private void populate()
     {
-        Random rand = Randomizer.getRandom();
+        //  Random rand = Randomizer.getRandom();
         field.clear();
         for(int row = 0; row < field.getDepth(); row++) {
             for(int col = 0; col < field.getWidth(); col++) {

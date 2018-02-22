@@ -12,8 +12,8 @@ public class Grass extends Plant
 {
     private static final int MAX_AGE = 20;
     //private static final int FOOD_VALUE = 4;
-    private static final double PROCREATING_PROBABILITY = 0.2;
-    private static final double PROCREATING_AGE = 3;
+    private static final double PROCREATING_PROBABILITY = 0.5;
+    private static final double PROCREATING_AGE = 5;
     private static final int MAX_LITTER_SIZE = 2; //NOTE better name
     private static final Random rand = Randomizer.getRandom();
     private int age;

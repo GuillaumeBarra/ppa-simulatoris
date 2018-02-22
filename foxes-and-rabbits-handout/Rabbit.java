@@ -14,21 +14,21 @@ public class Rabbit extends Animal
     // Characteristics shared by all rabbits (class variables).
 
     // The probability of a rabbit escaping from a predator.
-    private static double escapeProbability = 0.3;
+    private static double escapeProbability = 0.5;
     // The probability change of a rabbit escaping from a predator.
     private static final double ESCAPE_PROBABILITY_CHANGE = 0.1;
     // The age at which a rabbit can start to procreate.
-    private static final int PROCREATING_AGE = 4;
+    private static final int PROCREATING_AGE = 1;
     // The age to which a rabbit can live.
-    private static final int MAX_AGE = 40;
+    private static final int MAX_AGE = 15;
     // The likelihood of a rabbit procreateing when it meets another rabbit.
-    private static final double PROCREATING_PROBABILITY = 0.08;
+    private static final double PROCREATING_PROBABILITY = 0.15;
     // The number of years before a rabbit can procreate again.
-    private static final int PROCREATING_INTERVAL = 3;
+    private static final int PROCREATING_INTERVAL = 2;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 2;
+    private static final int MAX_LITTER_SIZE = 10;
     // The huniting 
-    private static final int GRASS_FOOD_VALUE = 10;
+    private static final int GRASS_FOOD_VALUE = 5;
     // A shared random number generator to control procreateing.
     private static final Random rand = Randomizer.getRandom();
     // Wether or not the rabbit is asleep.
@@ -109,7 +109,7 @@ public class Rabbit extends Animal
     private void incrementHunger()
     {
         if (isAsleep) {
-            foodLevel -= 0.5;
+            foodLevel -= 0.2;
         } else {
             foodLevel--;
         }

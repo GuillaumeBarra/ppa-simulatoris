@@ -40,8 +40,12 @@ public class Anthrax extends Organism
     }
     
     public static int getOrganismsInfectedSize(){
-        return organismsInfected.size();
-    }
+        try {
+            return organismsInfected.size();
+        } catch(NullPointerException ex) {
+            return 0;
+        }
+        }
 
     public void act(List<Organism> newAnthrax, boolean isNight){
         // explain this
@@ -50,6 +54,7 @@ public class Anthrax extends Organism
         // System.out.println(organismsInfected.size());
         // System.out.println(numberOfAnthraxInstances);
         if (organismsInfected.size() == 0){
+            Simulator.setAnthraxCreated(false);
             setDead();
         }
 
